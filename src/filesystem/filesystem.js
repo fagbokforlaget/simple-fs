@@ -5,6 +5,7 @@ import Path from './path'
 import MODE from './mode'
 import Utils from './utils'
 import Node from './node'
+import Stats from './stats'
 
 export default class FileSystem {
   constructor (storage) {
@@ -143,5 +144,18 @@ export default class FileSystem {
     path = new Path(path).normalize()
 
     return this.storage.exists(path.path)
+  }
+
+  stats (path) {
+    return this.exists(path)
+      .then((data) => {
+        return new Promise((resolve, reject) => {
+          if (data) {
+            resolve(new Stats(data.node, this.path))
+          } else {
+            reject(new Error('path does not exists'))
+          }
+        })
+      }).catch((err) => { throw err })
   }
 }

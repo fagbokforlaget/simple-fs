@@ -24,7 +24,7 @@ stats(<path>)
 
 ## Usage
 ```javascript
-import { FileSystem } from '@forlagshuset/simple-fs'
+import FileSystem from '@forlagshuset/simple-fs'
 
 let fs = new FileSystem({name: 'storage-name'})
 

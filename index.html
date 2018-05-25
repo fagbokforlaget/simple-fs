@@ -9,6 +9,18 @@
 </head>
 
 <body>
-  <script src="dist/indexeddbFS.umd.js"></script>
+  <script src="dist/indexedDBFS.min.js"></script>
+  <script>
+    let fs = new indexedDBFS({backend: 'indexeddb', name: 'book-store'})
+
+    // this should add abc folder
+    fs.mkdir('abc').then((data) => {console.log(data)}).catch((e) => {console.error(e)})
+
+    // this should add def folder to abc
+    fs.mkdir('abc/def').then((data) => {console.log(data)}).catch((e) => {console.error(e)})
+
+    // this should remove folder
+    fs.rmdir('abc/def').then((data) => {console.log(data)}).catch((e) => {console.error(e)})
+  </script>
 </body>
 </html>

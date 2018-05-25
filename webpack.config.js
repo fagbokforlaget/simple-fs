@@ -3,16 +3,10 @@ var UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 var path = require('path');
 var env = require('yargs').argv.mode;
 
-var libraryName = 'indexeddbFS';
+var libraryName = 'indexedDBFS';
 
 var plugins = [], outputFile;
-
-if (env === 'build') {
-  plugins.push(new UglifyJsPlugin({ minimize: true, sourceMap: true }));
-  outputFile = libraryName + '.umd.min.js';
-} else {
-  outputFile = libraryName + '.umd.js';
-}
+var outputFile = libraryName + '.js';
 
 var config = {
   entry: __dirname + '/src/index.js',
@@ -21,8 +15,7 @@ var config = {
     path: __dirname + '/dist',
     filename: outputFile,
     library: libraryName,
-    libraryTarget: 'umd',
-    umdNamedDefine: true
+    libraryExport: 'default'
   },
   module: {
     rules: [
@@ -55,10 +48,7 @@ var config = {
 module.exports = function(env) {
   if (env === 'production') {
     plugins.push(new UglifyJsPlugin({ minimize: true, sourceMap: true }));
-
-    outputFile = libraryName + '.min.js';
-  } else {
-    outputFile = libraryName + '.js';
+    config.output.filename = libraryName + '.min.js';
   }
 
   return config;

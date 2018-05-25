@@ -6,10 +6,17 @@ import MODE from './mode'
 import Utils from './utils'
 import Node from './node'
 import Stats from './stats'
+import IndexedDbStorage from '../storages/indexeddb'
 
 export default class FileSystem {
-  constructor (storage) {
-    this.storage = storage
+  constructor (opts) {
+    this.storage = null
+
+    switch (opts.backend) {
+      case 'indexeddb':
+        this.storage = new IndexedDbStorage(opts.name)
+        break
+    }
   }
 
   mkdir (path) {

@@ -1,9 +1,13 @@
 // I decied to keep it simple, it's just a storage
 
 import Dexie from 'dexie'
+import BaseStorage from './base'
 
-export default class Storage {
+export default class Storage extends BaseStorage {
   constructor (storageName) {
+    super(storageName)
+
+    this.name = 'indexeddb'
     this.storage = new Dexie(storageName)
 
     this.storage.version(1).stores({
@@ -32,7 +36,6 @@ export default class Storage {
       this.storage.files.where({parentId: parentId})
         .count()
         .then((count) => {
-          console.log('count', count)
           resolve(count === 0)
         })
     })

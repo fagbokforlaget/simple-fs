@@ -16,7 +16,6 @@ module.exports = {
     '<rootDir>/test/e2e'
   ],
   setupFiles: ['<rootDir>/test/unit/setup'],
-  mapCoverage: true,
   coverageDirectory: '<rootDir>/test/unit/coverage',
   collectCoverageFrom: [
     'src/**/*.{js}',

@@ -1,11 +1,13 @@
 # SimpleFS
 NOTE: api may change significantly, don't use it on production
+[![Build Status](https://travis-ci.org/fagbokforlaget/simple-fs.svg?branch=master)](https://travis-ci.org/fagbokforlaget/simple-fs)
 
 A minimal, extensible and promise based filesystem layer for modern browsers.
 
 ## Supported backeneds
 
 * IndexedDB (default)
+* Memory
 
 ## API
 

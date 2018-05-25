@@ -7,6 +7,7 @@ import Utils from './utils'
 import Node from './node'
 import Stats from './stats'
 import IndexedDbStorage from '../storages/indexeddb'
+import MemoryStorage from '../storages/memory'
 
 export default class FileSystem {
   constructor (opts) {
@@ -16,6 +17,9 @@ export default class FileSystem {
     switch (opts.backend) {
       case 'indexeddb':
         this.storage = new IndexedDbStorage(opts.name)
+        break
+      case 'memory':
+        this.storage = new MemoryStorage(opts.name)
         break
     }
   }
@@ -81,6 +85,9 @@ export default class FileSystem {
     return new Promise((resolve, reject) => {
       this.storage.get(path.path)
         .then((data) => {
+          if (!data) {
+            throw new Error('file does not exists')
+          }
           resolve(data.node.data)
         })
         .catch((e) => reject(e))
@@ -111,7 +118,9 @@ export default class FileSystem {
   }
 
   rename (oldPath, newPath) {
-    throw Error('Not implemented')
+    return new Promise((resolve, reject) => {
+      throw Error('not implemented')
+    })
   }
 
   unlink (path) {

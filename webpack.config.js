@@ -3,7 +3,7 @@ var UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 var path = require('path');
 var env = require('yargs').argv.mode;
 
-var libraryName = 'indexedDBFS';
+var libraryName = 'simpleFS';
 
 var plugins = [], outputFile;
 var outputFile = libraryName + '.js';

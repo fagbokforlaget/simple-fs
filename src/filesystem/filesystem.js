@@ -10,6 +10,7 @@ import IndexedDbStorage from '../storages/indexeddb'
 
 export default class FileSystem {
   constructor (opts) {
+    opts.backend = opts.backend || 'indexeddb'
     this.storage = null
 
     switch (opts.backend) {
@@ -21,6 +22,7 @@ export default class FileSystem {
 
   mkdir (path) {
     path = new Path(path).normalize()
+
     return this.exists(path)
       .then((data) => {
         if (data) {
@@ -40,32 +42,32 @@ export default class FileSystem {
             let id = Utils.uuid()
             let node = new Node(id, MODE.DIR, 0)
 
-            return this.storage.mkdir(id, path.path, node, parentId)
+            return this.storage.create(id, path.path, node, parentId)
           })
       })
   }
 
   rmdir (path) {
-    path = new Path(path).normalize()
-    var id
+    let id
 
+    path = new Path(path).normalize()
     return this.exists(path)
       .then((data) => {
         if (!data) {
-          return true
+          throw new Error('dir does not exists')
         } else if (data.node.mode === MODE.DIR) {
           id = data.id
           return this.storage.isEmpty(data.id)
         } else {
-          throw new Error('it\'s not a dir')
+          throw new Error('it is not a dir')
         }
       })
       .then((isEmpty) => {
         if (isEmpty) {
           if (id) {
-            return this.storage.rmdir(id)
+            return this.storage.remove(id)
           } else {
-            return true
+            throw new Error('internal error: file id is missing')
           }
         } else {
           throw new Error('dir is not empty')
@@ -73,84 +75,64 @@ export default class FileSystem {
       })
   }
 
-  open (path, flags) {
-
-  }
-
-  read (filehandle, buffer, offset, length, position) {
-
-  }
-
   readFile (path, options) {
     path = new Path(path).normalize()
 
     return new Promise((resolve, reject) => {
-      this.storage.read(path.path)
-        .then((blob) => {
-          // we can read the data here
-          // var reader = new FileReader();
-          // reader.addEventListener("loadend", function() {
-          //    // reader.result contains the contents of blob as a typed array
-          // });
-          // reader.readAsBinaryString(blob);
-
-          resolve(blob)
+      this.storage.get(path.path)
+        .then((data) => {
+          resolve(data.node.data)
         })
         .catch((e) => reject(e))
     })
   }
 
-  write (filehandle, buffer, offset, length, position) {
-
-  }
-
   writeFile (path, data, options) {
     path = new Path(path).normalize()
 
+    if (!(data instanceof Blob)) {
+      throw new Error('data must be instance of Blob')
+    }
+
     return this.exists(path.parent)
       .then((parent) => {
+        const id = Utils.uuid()
+        const parentId = 0
+        const node = new Node(id, MODE.FILE, data.size, options, data)
+
         if (!parent) {
           throw new Error('file needs parent')
-        } else if (parent && parent.mode !== MODE.DIR) {
+        } else if (parent && parent.node.mode !== MODE.DIR) {
           throw new Error('parent should be dir')
         }
-        return true
+
+        return this.storage.put(id, path.path, node, parentId)
       })
-      .then(() => {
-        return this.exists(path)
-      })
-      .then((data) => {
-        let id = Utils.uuid()
-        let node
-        let parentId = 0
-
-        if (data) {
-          id = data.id
-          parentId = data.parentId
-        }
-
-        node = new Node(id, MODE.FILE, data.size, options, data)
-
-        return this.storage.write(id, path.path, node, parentId)
-      })
-  }
-
-  access (path, mode) {
-
   }
 
   rename (oldPath, newPath) {
-
+    throw Error('Not implemented')
   }
 
   unlink (path) {
+    path = new Path(path).normalize()
 
+    return this.exists(path)
+      .then((data) => {
+        if (!data) {
+          throw new Error('file does not exists')
+        } else if (data.node.mode === MODE.DIR) {
+          throw new Error('path points to a directory, please use rmdir')
+        } else {
+          return this.storage.remove(data.id)
+        }
+      })
   }
 
   exists (path) {
     path = new Path(path).normalize()
 
-    return this.storage.exists(path.path)
+    return this.storage.get(path.path)
   }
 
   stats (path) {

@@ -1,5 +1,5 @@
 {
-  "name": "@forlagshuset/indexeddb-fs",
+  "name": "@forlagshuset/simple-fs",
   "version": "0.1.7",
   "description": "File system in indexeddb",
   "main": "./src/index.js",

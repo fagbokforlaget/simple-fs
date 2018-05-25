@@ -9,18 +9,37 @@
 </head>
 
 <body>
-  <script src="dist/indexedDBFS.min.js"></script>
+  <script src="dist/simpleFS.js"></script>
   <script>
-    let fs = new indexedDBFS({backend: 'indexeddb', name: 'book-store'})
+    let fs = new simpleFS({backend: 'indexeddb', name: 'book-store'})
 
-    // this should add abc folder
+    // creates abc folder
     fs.mkdir('abc').then((data) => {console.log(data)}).catch((e) => {console.error(e)})
 
-    // this should add def folder to abc
+    // adds def folder to abc
     fs.mkdir('abc/def').then((data) => {console.log(data)}).catch((e) => {console.error(e)})
 
-    // this should remove folder
+    // removes folder
     fs.rmdir('abc/def').then((data) => {console.log(data)}).catch((e) => {console.error(e)})
+
+    // creates file
+    fs.writeFile('abc/test.txt', new Blob(['this is my cool text file'], {type:'plain/text'})).then((data) => {console.log(data)}).catch((e) => {console.error(e)})
+
+    // read files
+    fs.readFile('abc/test.txt').then((data) => {
+      // data is blob
+      console.log(data);
+
+      // create file reader and read blob
+      var fr = new FileReader();
+      fr.onload = function() {
+        console.log(fr.result);
+      }
+      fr.readAsText(data);
+    }).catch((e) => {console.error(e)})
+
+    // deletes file
+    fs.unlink('abc/test.txt').then((data) => {console.log(data)}).catch((e) => {console.error(e)})
   </script>
 </body>
 </html>

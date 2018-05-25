@@ -11,23 +11,19 @@ export default class Storage {
     })
   }
 
-  mkdir (id, path, node, parentId) {
-    return this.write(id, path, node, parentId)
+  create (id, path, node, parentId) {
+    return this.put(id, path, node, parentId)
   }
 
-  rmdir (id) {
+  remove (id) {
     return this.storage.files.delete(id)
   }
 
-  write (id, path, node, parentId) {
+  put (id, path, node, parentId) {
     return this.storage.files.put({id: id, path: path, node: node, parentId: parentId})
   }
 
-  exists (path) {
-    return this.storage.files.get({path: path})
-  }
-
-  read (path, flags) {
+  get (path) {
     return this.storage.files.get({path: path})
   }
 

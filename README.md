@@ -26,8 +26,15 @@ import { FileSystem } from '@forlagshuset/simple-fs'
 
 let fs = new FileSystem({name: 'storage-name'})
 
-// this should add abc folder
-let resp = await fs.mkdir('abc')
+// first create root folder
+let root = await fs.mkdir('/myproject')
+
+// create a file under root folder
+let content = new Blob(['This is my cool project'], {type: 'plain/text'})
+let data = await fs.writeFile('/myproject/test.txt', content)
+
+// get content as blob
+let blob = await fs.readFile('/myproject/test.txt')
 ```
 
 ## Browser support

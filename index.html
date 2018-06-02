@@ -9,6 +9,7 @@
 </head>
 
 <body>
+  <iframe id="frame"></iframe>
   <script src="dist/simpleFS.js"></script>
   <script>
     let fs = new simpleFS({backend: 'indexeddb', name: 'book-store'})
@@ -22,13 +23,19 @@
     // removes folder
     fs.rmdir('abc/def').then((data) => {console.log(data)}).catch((e) => {console.error(e)})
 
+    fs.writeFile('abc/theme.css', new Blob(['h1 { color: green }'], {type: 'text/css'})).then((data) => { console.log(data) }).catch((e) => { console.error(e) })
+
     // creates file
-    fs.writeFile('abc/test.txt', new Blob(['this is my cool text file'], {type:'plain/text'})).then((data) => {console.log(data)}).catch((e) => {console.error(e)})
+fs.writeFile('abc/test.html', new Blob(['<html><head><link rel="stylesheet" type="text/css" href="abc/theme.css"></head><body><h1>Bloby</h1><img src="https://res.cloudinary.com/forlagshuset/image/upload/v1520845867/FBF_banner_spring_fpa5e3bd2o.jpg"></body></html>'], {type:'text/html'})).then((data) => {console.log(data)}).catch((e) => {console.error(e)})
 
     // read files
-    fs.readFile('abc/test.txt').then((data) => {
+    fs.readFile('abc/test.html').then((data) => {
       // data is blob
       console.log(data);
+      var url = URL.createObjectURL(data);
+      console.log('blob url: ' + url);
+      var frame = document.getElementById('frame');
+      frame.setAttribute('src', url);
 
       // create file reader and read blob
       var fr = new FileReader();

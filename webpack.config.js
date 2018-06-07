@@ -15,7 +15,8 @@ var config = {
     path: __dirname + '/dist',
     filename: outputFile,
     library: libraryName,
-    libraryExport: 'default'
+    libraryExport: 'default',
+    libraryTarget: 'umd'
   },
   module: {
     rules: [

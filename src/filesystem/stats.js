@@ -1,7 +1,7 @@
 import MODE from './mode'
 
 export default class Stats {
-  contructor (node, devName) {
+  constructor (node, devName) {
     this.node = node
     this.dev = devName
     this.size = node.size

@@ -103,15 +103,15 @@ export default class FileSystem {
 
     return this.exists(path.parent)
       .then((parent) => {
-        const id = Utils.uuid()
-        const parentId = 0
-        const node = new Node(id, MODE.FILE, data.size, options, data)
-
         if (!parent) {
           throw new Error('file needs parent')
         } else if (parent && parent.node.mode !== MODE.DIR) {
           throw new Error('parent should be dir')
         }
+
+        const id = Utils.uuid()
+        const parentId = parent.id
+        const node = new Node(id, MODE.FILE, data.size, options, data)
 
         return this.storage.put(id, path.path, node, parentId)
       })
@@ -155,5 +155,16 @@ export default class FileSystem {
           }
         })
       }).catch((err) => { throw err })
+  }
+
+  ls (path, options = {}) {
+    return this.exists(path)
+      .then((data) => {
+        if (data) {
+          return this.storage.getBy("parentId", data.id)
+        } else {
+          return new Error('path does not exists')
+        }
+      })
   }
 }

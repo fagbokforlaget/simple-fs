@@ -1,7 +1,9 @@
 import MODE from './mode'
+import Stats from './stats'
 
-export default class FileInfo {
+export default class FileInfo extends Stats {
   constructor (node, path) {
+    super(node, path)
     this.path = path
     this.assign(node)
   }
@@ -10,31 +12,4 @@ export default class FileInfo {
     Object.keys(node).forEach(key => this[key] = node[key])
   }
 
-  isFile () {
-    return (this.mode === MODE.FILE)
-  }
-
-  isDirectory () {
-    return (this.mode === MODE.DIR)
-  }
-
-  isSymbolicLink () {
-    return (this.mode === MODE.SYMBOLIC_LINK)
-  }
-
-  isSocket () {
-    return false
-  }
-
-  isFIFO () {
-    return false
-  }
-
-  isCharacterDevice () {
-    return false
-  }
-
-  isBlockDevice () {
-    return false
-  }
 }

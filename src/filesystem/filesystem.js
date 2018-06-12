@@ -161,7 +161,7 @@ export default class FileSystem {
     return this.exists(path)
       .then((data) => {
         if (data) {
-          return this.storage.getBy("parentId", data.id)
+          return this.storage.getBy('parentId', data.id)
         } else {
           return new Error('path does not exists')
         }

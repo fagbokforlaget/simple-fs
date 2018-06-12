@@ -64,7 +64,7 @@ export default class FileSystem {
       })
       .then((isEmpty) => {
         if (isEmpty) {
-            return this.storage.remove(path.path)
+          return this.storage.remove(path.path)
         } else {
           throw new Error('dir is not empty')
         }
@@ -153,17 +153,17 @@ export default class FileSystem {
       .then((data) => {
         if (data) {
           return new Promise((resolve, reject) => {
-            this.storage.getBy("parentId", data.path)
+            this.storage.getBy('parentId', data.path)
               .then((nodes) => {
-                  if(Object.keys(filters).length > 0) {
-                    nodes = nodes.filter((node) => {
-                      node = new FileInfo(node.node, node.path)
-                      return Object.keys(filters).some((key) => {
-                        return node[key] === filters[key]
-                      })
+                if (Object.keys(filters).length > 0) {
+                  nodes = nodes.filter((node) => {
+                    node = new FileInfo(node.node, node.path)
+                    return Object.keys(filters).some((key) => {
+                      return node[key] === filters[key]
                     })
-                  }
-                  resolve(nodes.map(node => new FileInfo(node.node, node.path)))
+                  })
+                }
+                resolve(nodes.map(node => new FileInfo(node.node, node.path)))
               })
           })
         } else {

@@ -1,4 +1,3 @@
-import MODE from './mode'
 import Stats from './stats'
 
 export default class FileInfo extends Stats {
@@ -9,7 +8,8 @@ export default class FileInfo extends Stats {
   }
 
   assign (node) {
-    Object.keys(node).forEach(key => this[key] = node[key])
+    Object.keys(node).forEach(key => {
+      this[key] = node[key]
+    })
   }
-
 }

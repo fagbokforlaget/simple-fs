@@ -101,14 +101,53 @@ describe('Filesystem API', () => {
     expect(typeof stats).toBe('object')
   })
 
+  it('check if file is a directory', async () => {
+    let fs = new FileSystem({backend: 'memory', name: 'test'})
+
+    let id = await fs.mkdir('root')
+    expect(typeof id).toBe('string')
+
+    let blob = new Blob(['my test data'], {type: 'plain/text'})
+    let resp = await fs.writeFile('root/test.txt', blob)
+    expect(typeof resp).toBe('string')
+
+    let stats = await fs.stats('root')
+
+    expect(stats.isFile()).toBe(false)
+    expect(stats.isSymbolicLink()).toBe(false)
+    expect(stats.isDirectory()).toBe(true)
+  })
+
   it('rename file', async () => {
     let fs = new FileSystem({backend: 'memory', name: 'test'})
 
     await expect(fs.rename('root/test.txt', 'root/new.txt')).rejects.toEqual(new Error('not implemented'))
   })
 
+  it('list root files', async() => {
+    let fs = new FileSystem({backend: 'memory', name: 'test'})
+    let root_dir = await fs.mkdir('root')
+    let child_dir = await fs.mkdir('root/files')
+    let blob = new Blob(['my test data'], {type: 'plain/text'})
+    let root_dir_file = await fs.writeFile('root/test1.txt', blob)
+    let child_dir_file1 = await fs.writeFile('root/files/test2.txt', blob)
+    let child_dir_file2 = await fs.writeFile('root/files/test3.txt', blob)
 
+    let resp_root = await fs.ls('root')
+    expect(resp_root.length).toBe(2) //root/files, root/test1.txt
+  })
 
+  it('list child files', async() => {
+    let fs = new FileSystem({backend: 'memory', name: 'test'})
+    let root_dir = await fs.mkdir('root')
+    let child_dir = await fs.mkdir('root/files')
+    let blob = new Blob(['my test data'], {type: 'plain/text'})
+    let root_dir_file = await fs.writeFile('root/test1.txt', blob)
+    let child_dir_file1 = await fs.writeFile('root/files/test2.txt', blob)
+    let child_dir_file2 = await fs.writeFile('root/files/test3.txt', blob)
 
+    let resp_child = await fs.ls('root/files')
+    expect(resp_child.length).toBe(2)
+  })
 
 })

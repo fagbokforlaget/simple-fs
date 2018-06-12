@@ -41,6 +41,20 @@ export default class MemoryStorage extends BaseStorage {
     })
   }
 
+  getBy (key, value) {
+    return new Promise((resolve, reject) => {
+      const keys = Object.keys(this.data)
+      let ret = []
+
+      for (let i = 0; i < keys.length; i++) {
+        if (this.data[keys[i]][key] === value) {
+          ret.push(this.data[keys[i]])
+        }
+      }
+      resolve(ret)
+    })
+  }
+
   isEmpty (parentId) {
     return new Promise((resolve, reject) => {
       let count = 0

@@ -31,6 +31,13 @@ export default class Storage extends BaseStorage {
     return this.storage.files.get({path: path})
   }
 
+  getBy (key, value) {
+    let params = {}
+    params[key] = value
+
+    return this.storage.files.get(params)
+  }
+
   isEmpty (parentId) {
     return new Promise((resolve, reject) => {
       this.storage.files.where({parentId: parentId})

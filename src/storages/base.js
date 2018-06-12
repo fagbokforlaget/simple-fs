@@ -15,6 +15,10 @@ export default class BaseStorage {
     throw new Error('not implemented')
   }
 
+  getBy (key, value) {
+    throw new Error('not implemented')
+  }
+
   isEmpty (parentId) {
     throw new Error('not implemented')
   }

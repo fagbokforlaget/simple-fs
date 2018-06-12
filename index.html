@@ -10,9 +10,9 @@
 
 <body>
   <iframe id="frame"></iframe>
-  <script src="dist/simpleFS.min.js"></script>
+  <script src="dist/SimpleFS.min.js"></script>
   <script>
-    let fs = new simpleFS({backend: 'indexeddb', name: 'book-store'})
+    const fs = new SimpleFS({backend: 'indexeddb', name: 'book-store'})
 
     // creates abc folder
     fs.mkdir('abc').then((data) => {console.log(data)}).catch((e) => {console.error(e)})

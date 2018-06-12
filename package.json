@@ -2,7 +2,7 @@
   "name": "@forlagshuset/simple-fs",
   "version": "0.1.9",
   "description": "File system in indexeddb",
-  "main": "./dist/simpleFS.min.js",
+  "main": "./dist/SimpleFS.min.js",
   "scripts": {
     "build": "webpack --env=production",
     "dev": "webpack --progress --colors --watch --env=devlopment",

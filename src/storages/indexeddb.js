@@ -11,20 +11,20 @@ export default class Storage extends BaseStorage {
     this.storage = new Dexie(storageName)
 
     this.storage.version(1).stores({
-      files: 'id,path,node,parentId'
+      files: 'path,node,parentId'
     })
   }
 
-  create (id, path, node, parentId) {
-    return this.put(id, path, node, parentId)
+  create (path, node, parentId) {
+    return this.put(path, node, parentId)
   }
 
-  remove (id) {
-    return this.storage.files.delete(id)
+  remove (path) {
+    return this.storage.files.delete({path: path})
   }
 
-  put (id, path, node, parentId) {
-    return this.storage.files.put({id: id, path: path, node: node, parentId: parentId})
+  put (path, node, parentId) {
+    return this.storage.files.put({path: path, node: node, parentId: parentId})
   }
 
   get (path) {

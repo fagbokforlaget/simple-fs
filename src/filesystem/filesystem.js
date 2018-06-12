@@ -3,7 +3,6 @@
 
 import Path from './path'
 import MODE from './mode'
-import Utils from './utils'
 import Node from './node'
 import Stats from './stats'
 import FileInfo from './fileinfo'
@@ -31,12 +30,12 @@ export default class FileSystem {
     return this.exists(path)
       .then((data) => {
         if (data) {
-          return data.id
+          return data.path
         }
 
         return this.exists(path.parent)
           .then((parent) => {
-            let parentId = parent ? parent.id : 0
+            let parentId = parent ? parent.path : 0
 
             if (!path.parent.isRoot && !parent) {
               throw new Error('parent is not created yet')
@@ -44,36 +43,28 @@ export default class FileSystem {
               throw new Error('parent is not dir')
             }
 
-            let id = Utils.uuid()
-            let node = new Node(id, MODE.DIR, 0)
+            let node = new Node(path.path, MODE.DIR, 0)
 
-            return this.storage.create(id, path.path, node, parentId)
+            return this.storage.create(path.path, node, parentId)
           })
       })
   }
 
   rmdir (path) {
-    let id
-
     path = new Path(path).normalize()
     return this.exists(path)
       .then((data) => {
         if (!data) {
           throw new Error('dir does not exists')
         } else if (data.node.mode === MODE.DIR) {
-          id = data.id
-          return this.storage.isEmpty(data.id)
+          return this.storage.isEmpty(data.path)
         } else {
           throw new Error('it is not a dir')
         }
       })
       .then((isEmpty) => {
         if (isEmpty) {
-          if (id) {
-            return this.storage.remove(id)
-          } else {
-            throw new Error('internal error: file id is missing')
-          }
+            return this.storage.remove(path.path)
         } else {
           throw new Error('dir is not empty')
         }
@@ -110,11 +101,10 @@ export default class FileSystem {
           throw new Error('parent should be dir')
         }
 
-        const id = Utils.uuid()
-        const parentId = parent.id
-        const node = new Node(id, MODE.FILE, data.size, options, data)
+        const parentId = parent.path
+        const node = new Node(path.path, MODE.FILE, data.size, options, data)
 
-        return this.storage.put(id, path.path, node, parentId)
+        return this.storage.put(path.path, node, parentId)
       })
   }
 
@@ -134,7 +124,7 @@ export default class FileSystem {
         } else if (data.node.mode === MODE.DIR) {
           throw new Error('path points to a directory, please use rmdir')
         } else {
-          return this.storage.remove(data.id)
+          return this.storage.remove(data.path)
         }
       })
   }
@@ -163,7 +153,7 @@ export default class FileSystem {
       .then((data) => {
         if (data) {
           return new Promise((resolve, reject) => {
-            this.storage.getBy("parentId", data.id)
+            this.storage.getBy("parentId", data.path)
               .then((nodes) => {
                   if(Object.keys(filters).length > 0) {
                     nodes = nodes.filter((node) => {

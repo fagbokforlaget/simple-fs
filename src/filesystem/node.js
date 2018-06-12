@@ -4,10 +4,10 @@
 import MODE from './mode'
 
 export default class Node {
-  constructor (id, mode, size, flags, data, atime, ctime, mtime) {
+  constructor (path, mode, size, flags, data, atime, ctime, mtime) {
     const now = Date.now()
 
-    this.id = id
+    this.path = path
     this.mode = mode || MODE.FILE
     this.size = size || 0
     this.flags = flags || {}

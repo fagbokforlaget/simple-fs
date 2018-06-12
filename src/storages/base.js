@@ -1,13 +1,13 @@
 export default class BaseStorage {
-  create (id, path, node, paraentId) {
+  create (path, node, paraentId) {
     throw new Error('not implemented')
   }
 
-  remove (id) {
+  remove (path) {
     throw new Error('not implemented')
   }
 
-  put (id, path, node, parentId) {
+  put (path, node, parentId) {
     throw new Error('not implemented')
   }
 

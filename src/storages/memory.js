@@ -8,24 +8,24 @@ export default class MemoryStorage extends BaseStorage {
     this.data = {}
   }
 
-  create (id, path, node, parentId) {
-    this.data[id] = {id: id, path: path, node: node, parentId: parentId}
+  create (path, node, parentId) {
+    this.data[path] = {path: path, node: node, parentId: parentId}
     return new Promise((resolve, reject) => {
-      resolve(id)
+      resolve(path)
     })
   }
 
-  remove (id) {
+  remove (path) {
     return new Promise((resolve, reject) => {
-      if (id in this.data) {
-        delete this.data[id]
+      if (path in this.data) {
+        delete this.data[path]
       }
       resolve(undefined)
     })
   }
 
-  put (id, path, node, parentId) {
-    return this.create(id, path, node, parentId)
+  put (path, node, parentId) {
+    return this.create(path, node, parentId)
   }
 
   get (path) {

@@ -6,6 +6,7 @@ import MODE from './mode'
 import Utils from './utils'
 import Node from './node'
 import Stats from './stats'
+import FileInfo from './fileinfo'
 import IndexedDbStorage from '../storages/indexeddb'
 import MemoryStorage from '../storages/memory'
 
@@ -157,11 +158,24 @@ export default class FileSystem {
       }).catch((err) => { throw err })
   }
 
-  ls (path, options = {}) {
+  ls (path, filters = {}) {
     return this.exists(path)
       .then((data) => {
         if (data) {
-          return this.storage.getBy("parentId", data.id)
+          return new Promise((resolve, reject) => {
+            this.storage.getBy("parentId", data.id)
+              .then((nodes) => {
+                  if(Object.keys(filters).length > 0) {
+                    nodes = nodes.filter((node) => {
+                      node = new FileInfo(node.node, node.path)
+                      return Object.keys(filters).some((key) => {
+                        return node[key] === filters[key]
+                      })
+                    })
+                  }
+                  resolve(nodes.map(node => new FileInfo(node.node, node.path)))
+              })
+          })
         } else {
           return new Error('path does not exists')
         }

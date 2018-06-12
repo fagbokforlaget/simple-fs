@@ -150,4 +150,30 @@ describe('Filesystem API', () => {
     expect(resp_child.length).toBe(2)
   })
 
+  it('list child file as FileInfo', async() => {
+    let fs = new FileSystem({backend: 'memory', name: 'test'})
+    let root_dir = await fs.mkdir('root')
+    let child_dir = await fs.mkdir('root/files')
+    let blob = new Blob(['my test data'], {type: 'plain/text'})
+    let root_dir_file = await fs.writeFile('root/test1.txt', blob)
+    let child_dir_file1 = await fs.writeFile('root/files/test2.txt', blob)
+    let child_dir_file2 = await fs.writeFile('root/files/test3.txt', blob)
+
+    let resp_child = await fs.ls('root/files')
+    expect(resp_child[0].mode).toBe('FILE')
+    expect(resp_child[0].isFile()).toBe(true)
+  })
+
+  it('filters output', async() => {
+    let fs = new FileSystem({backend: 'memory', name: 'test'})
+    let root_dir = await fs.mkdir('root')
+    let child_dir = await fs.mkdir('root/files')
+    let blob = new Blob(['my test data'], {type: 'plain/text'})
+    let root_dir_file = await fs.writeFile('root/test1.txt', blob)
+    let child_dir_file1 = await fs.writeFile('root/files/test2.txt', blob)
+    let child_dir_file2 = await fs.writeFile('root/files/test3.txt', blob)
+    let resp_root = await fs.ls('root', {'mode': 'DIR'})
+    expect(resp_root.length).toBe(1) //root/files, root/test1.txt
+  })
+
 })

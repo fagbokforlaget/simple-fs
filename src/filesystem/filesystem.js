@@ -50,6 +50,16 @@ export default class FileSystem {
       })
   }
 
+  mkdir_p (path, root="") {
+    path = new Path(path).normalize()
+    var mparts = path.path.split('/')
+    var currentPath = root + "/" + mparts.shift()
+    if(mparts.length == 0)
+      return this.mkdir(currentPath)
+
+    return this.mkdir(currentPath).then(p => this.mkdir_p(mparts.join('/'), currentPath))
+  }
+
   rmdir (path) {
     path = new Path(path).normalize()
     return this.exists(path)

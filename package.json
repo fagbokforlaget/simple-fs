@@ -46,9 +46,10 @@
     "npm": ">= 3.0.0"
   },
   "keywords": [
-    "fetch",
-    "download",
-    "manager"
+    "offline",
+    "indexeddb",
+    "promise",
+    "filesystem"
   ],
   "browserslist": [
     "> 1%",

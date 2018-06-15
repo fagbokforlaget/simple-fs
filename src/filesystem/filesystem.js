@@ -51,7 +51,7 @@ export default class FileSystem {
   }
 
   // Recursively creates directory, eq. to mkdir -p
-  mkdir_p (path, root='') {
+  mkdirParents (path, root = '') {
     let mparts
     let mroot
     let currentPath
@@ -61,7 +61,7 @@ export default class FileSystem {
     mroot = root === '' ? '' : `${root}/`
     currentPath = mroot + mparts.shift()
 
-    if(mparts.length == 0) {
+    if (mparts.length === 0) {
       return this.mkdir(currentPath)
     }
 
@@ -135,7 +135,7 @@ export default class FileSystem {
       throw new Error('data must be instance of Blob')
     }
 
-    return this.mkdir_p(path.parent)
+    return this.mkdirParents(path.parent)
       .then(parentPath => this.exists(parentPath))
       .then((parent) => {
         if (parent && parent.node.mode !== MODE.DIR) {

@@ -44,7 +44,7 @@ let blob = await fs.readFile('/myproject/test.txt')
 
 ```javascript
 mkdir(<path>)
-mkdir_p(<path>) // wraps mkdir -p
+mkdirParents(<path>) // wraps mkdir -p
 rmdir(<path>)
 readFile(<path>, <options>={}) // returns Blob
 writeFile(<path>, <data>, <options>={}) // data should be Blob type

@@ -13,10 +13,10 @@ describe('Filesystem API', () => {
     expect(typeof id).toBe('string')
   })
 
-  it('create directory mkdir_p', async () => {
+  it('create directory mkdirParents', async () => {
     let fs = new FileSystem({backend: 'memory', name: 'test'})
     let path = "root/is/the/king"
-    let id = await fs.mkdir_p(path)
+    let id = await fs.mkdirParents(path)
     expect(id).toBe(path)
   })
 

@@ -53,9 +53,11 @@ export default class FileSystem {
   mkdir_p (path, root="") {
     path = new Path(path).normalize()
     var mparts = path.path.split('/')
-    var currentPath = root + "/" + mparts.shift()
-    if(mparts.length == 0)
+    let mroot = root === "" ? "" : root + "/"
+    var currentPath = mroot + mparts.shift()
+    if(mparts.length == 0) {
       return this.mkdir(currentPath)
+    }
 
     return this.mkdir(currentPath).then(p => this.mkdir_p(mparts.join('/'), currentPath))
   }
@@ -96,6 +98,28 @@ export default class FileSystem {
     })
   }
 
+  // writeFile (path, data, options) {
+  //   path = new Path(path).normalize()
+
+  //   if (!(data instanceof Blob)) {
+  //     throw new Error('data must be instance of Blob')
+  //   }
+
+  //   return this.exists(path.parent)
+  //     .then((parent) => {
+  //       if (!parent) {
+  //         throw new Error('file needs parent')
+  //       } else if (parent && parent.node.mode !== MODE.DIR) {
+  //         throw new Error('parent should be dir')
+  //       }
+
+  //       const parentId = parent.path
+  //       const node = new Node(path.path, MODE.FILE, data.size, options, data)
+
+  //       return this.storage.put(path.path, node, parentId)
+  //     })
+  // }
+
   writeFile (path, data, options) {
     path = new Path(path).normalize()
 
@@ -103,11 +127,10 @@ export default class FileSystem {
       throw new Error('data must be instance of Blob')
     }
 
-    return this.exists(path.parent)
+    return this.mkdir_p(path.parent)
+      .then(parentPath => this.exists(parentPath))
       .then((parent) => {
-        if (!parent) {
-          throw new Error('file needs parent')
-        } else if (parent && parent.node.mode !== MODE.DIR) {
+        if (parent && parent.node.mode !== MODE.DIR) {
           throw new Error('parent should be dir')
         }
 

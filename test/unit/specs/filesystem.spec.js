@@ -15,7 +15,7 @@ describe('Filesystem API', () => {
 
   it('create directory mkdir_p', async () => {
     let fs = new FileSystem({backend: 'memory', name: 'test'})
-    let path = "/root/is/the/king"
+    let path = "root/is/the/king"
     let id = await fs.mkdir_p(path)
     expect(id).toBe(path)
   })
@@ -48,6 +48,15 @@ describe('Filesystem API', () => {
     expect(typeof resp).toBe('string')
   })
 
+  it('create file and creates parent dirs recursively', async () => {
+    let fs = new FileSystem({backend: 'memory', name: 'test'})
+
+    let blob = new Blob(['my test data'], {type: 'plain/text'})
+
+    let resp = await fs.writeFile('root/to/some/unknown/folder/test.txt', blob)
+    expect(typeof resp).toBe('string')
+  })
+
   it('read file', async () => {
     let fs = new FileSystem({backend: 'memory', name: 'test'})
 
@@ -71,12 +80,12 @@ describe('Filesystem API', () => {
     await expect(fs.readFile('root/test.txt')).rejects.toEqual(new Error('file does not exists'))
   })
 
-  it('write file without root', async () => {
-    let fs = new FileSystem({backend: 'memory', name: 'test'})
-    let blob = new Blob(['my test data'], {type: 'plain/text'})
+  // it('write file without root', async () => {
+  //   let fs = new FileSystem({backend: 'memory', name: 'test'})
+  //   let blob = new Blob(['my test data'], {type: 'plain/text'})
 
-    await expect(fs.writeFile('root/test.txt', blob)).rejects.toEqual(new Error('file needs parent'))
-  })
+  //   await expect(fs.writeFile('root/test.txt', blob)).rejects.toEqual(new Error('file needs parent'))
+  // })
 
   it('unlink file', async () => {
     let fs = new FileSystem({backend: 'memory', name: 'test'})

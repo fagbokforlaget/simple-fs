@@ -53,7 +53,7 @@ describe('Filesystem API', () => {
 
     let blob = new Blob(['my test data'], {type: 'plain/text'})
 
-    let resp = await fs.writeFile('root/to/some/unknown/folder/test.txt', blob)
+    let resp = await fs.outputFile('root/to/some/unknown/folder/test.txt', blob)
     expect(typeof resp).toBe('string')
   })
 

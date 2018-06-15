@@ -50,11 +50,17 @@ export default class FileSystem {
       })
   }
 
-  mkdir_p (path, root="") {
+  // Recursively creates directory, eq. to mkdir -p
+  mkdir_p (path, root='') {
+    let mparts
+    let mroot
+    let currentPath
+
     path = new Path(path).normalize()
-    var mparts = path.path.split('/')
-    let mroot = root === "" ? "" : root + "/"
-    var currentPath = mroot + mparts.shift()
+    mparts = path.path.split('/')
+    mroot = root === '' ? '' : `${root}/`
+    currentPath = mroot + mparts.shift()
+
     if(mparts.length == 0) {
       return this.mkdir(currentPath)
     }
@@ -98,29 +104,31 @@ export default class FileSystem {
     })
   }
 
-  // writeFile (path, data, options) {
-  //   path = new Path(path).normalize()
-
-  //   if (!(data instanceof Blob)) {
-  //     throw new Error('data must be instance of Blob')
-  //   }
-
-  //   return this.exists(path.parent)
-  //     .then((parent) => {
-  //       if (!parent) {
-  //         throw new Error('file needs parent')
-  //       } else if (parent && parent.node.mode !== MODE.DIR) {
-  //         throw new Error('parent should be dir')
-  //       }
-
-  //       const parentId = parent.path
-  //       const node = new Node(path.path, MODE.FILE, data.size, options, data)
-
-  //       return this.storage.put(path.path, node, parentId)
-  //     })
-  // }
-
   writeFile (path, data, options) {
+    path = new Path(path).normalize()
+
+    if (!(data instanceof Blob)) {
+      throw new Error('data must be instance of Blob')
+    }
+
+    return this.exists(path.parent)
+      .then((parent) => {
+        if (!parent) {
+          throw new Error('file needs parent')
+        } else if (parent && parent.node.mode !== MODE.DIR) {
+          throw new Error('parent should be dir')
+        }
+
+        const parentId = parent.path
+        const node = new Node(path.path, MODE.FILE, data.size, options, data)
+
+        return this.storage.put(path.path, node, parentId)
+      })
+  }
+
+  // Same as writeFile but it recursively creates directory
+  // if not exists
+  outputFile (path, data, options) {
     path = new Path(path).normalize()
 
     if (!(data instanceof Blob)) {

@@ -4,6 +4,7 @@
 [![Dependency Status](https://david-dm.org/fagbokforlaget/simple-fs.svg)](https://david-dm.org/fagbokforlaget/simple-fs)
 [![Known Vulnerabilities](https://snyk.io/test/github/fagbokforlaget/simple-fs/badge.svg?targetFile=package.json)](https://snyk.io/test/github/fagbokforlaget/simple-fs?targetFile=package.json)
 [![Build Status](https://travis-ci.org/fagbokforlaget/simple-fs.svg?branch=master)](https://travis-ci.org/fagbokforlaget/simple-fs)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 A minimal, extensible and promise based filesystem layer for modern browsers.
 

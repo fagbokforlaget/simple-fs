@@ -65,7 +65,7 @@ export default class FileSystem {
       return this.mkdir(currentPath)
     }
 
-    return this.mkdir(currentPath).then(p => this.mkdir_p(mparts.join('/'), currentPath))
+    return this.mkdir(currentPath).then(p => this.mkdirParents(mparts.join('/'), currentPath))
   }
 
   rmdir (path) {

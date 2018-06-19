@@ -15,7 +15,7 @@ describe('Filesystem API', () => {
 
   it('create directory mkdirParents', async () => {
     let fs = new FileSystem({backend: 'memory', name: 'test'})
-    let path = "root/is/the/king"
+    let path = "/root/is/the/king"
     let id = await fs.mkdirParents(path)
     expect(id).toBe(path)
   })
@@ -34,6 +34,22 @@ describe('Filesystem API', () => {
     let fs = new FileSystem({backend: 'memory', name: 'test'})
 
     await expect(fs.rmdir('root')).rejects.toEqual(new Error('dir does not exists'))
+  })
+
+  it('does not delete file with rmdir', async () => {
+    let fs = new FileSystem({backend: 'memory', name: 'test'})
+    let blob = new Blob(['my test data'], {type: 'plain/text'})
+    let resp = await fs.outputFile('/root/xx/test.txt', blob)
+
+    await expect(fs.rmdir('/root/xx/test.txt')).rejects.toEqual(new Error('it is not a dir'))
+  })
+
+  it('does not delete non-empty dirs', async () => {
+    let fs = new FileSystem({backend: 'memory', name: 'test'})
+    let blob = new Blob(['my test data'], {type: 'plain/text'})
+    let resp = await fs.outputFile('/root/xx/test.txt', blob)
+
+    await expect(fs.rmdir('/root/xx')).rejects.toEqual(new Error('dir is not empty'))
   })
 
   it('create file', async () => {
@@ -80,12 +96,12 @@ describe('Filesystem API', () => {
     await expect(fs.readFile('root/test.txt')).rejects.toEqual(new Error('file does not exists'))
   })
 
-  // it('write file without root', async () => {
-  //   let fs = new FileSystem({backend: 'memory', name: 'test'})
-  //   let blob = new Blob(['my test data'], {type: 'plain/text'})
+  it('write file without root', async () => {
+    let fs = new FileSystem({backend: 'memory', name: 'test'})
+    let blob = new Blob(['my test data'], {type: 'plain/text'})
 
-  //   await expect(fs.writeFile('root/test.txt', blob)).rejects.toEqual(new Error('file needs parent'))
-  // })
+    await expect(fs.writeFile('root/test.txt', blob)).rejects.toEqual(new Error('file needs parent'))
+  })
 
   it('unlink file', async () => {
     let fs = new FileSystem({backend: 'memory', name: 'test'})

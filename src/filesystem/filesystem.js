@@ -58,7 +58,7 @@ export default class FileSystem {
 
     path = new Path(path).normalize()
     mparts = path.path.split('/')
-    mroot = root === '' ? '' : `${root}/`
+    mroot = root === '' ? '/' : `${root}/`
     currentPath = mroot + mparts.shift()
 
     if (mparts.length === 0) {

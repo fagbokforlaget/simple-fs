@@ -9,7 +9,7 @@ export default class MemoryStorage extends BaseStorage {
   }
 
   create (path, node, parentId) {
-    this.data[path] = {path: path, node: node, parentId: parentId}
+    this.data[path] = { path: path, node: node, parentId: parentId }
     return new Promise((resolve, reject) => {
       resolve(path)
     })

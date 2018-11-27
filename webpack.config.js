@@ -1,14 +1,13 @@
-var webpack = require('webpack');
-var UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
-var path = require('path');
-var env = require('yargs').argv.mode;
+const webpack = require('webpack');
+const path = require('path');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
-var libraryName = 'SimpleFS';
+const libraryName = 'SimpleFS';
 
-var plugins = [], outputFile;
-var outputFile = libraryName + '.js';
+let outputFile = libraryName + '.min.js';
 
-var config = {
+module.exports =  {
+  mode: 'production',
   entry: __dirname + '/src/index.js',
   devtool: 'source-map',
   output: {
@@ -26,7 +25,7 @@ var config = {
         loader: 'babel-loader',
         options: {
           presets: [
-            [ 'env', { modules: false } ]
+            [ '@babel/env', { modules: false } ]
           ]
         }
       },
@@ -43,14 +42,18 @@ var config = {
       "node_modules"
     ]
   },
-  plugins: plugins
-};
-
-module.exports = function(env) {
-  if (env === 'production') {
-    plugins.push(new UglifyJsPlugin({ minimize: true, sourceMap: true }));
-    config.output.filename = libraryName + '.min.js';
-  }
-
-  return config;
+	optimization: {
+    minimizer: [
+      new UglifyJsPlugin({
+        cache: true,
+        parallel: true,
+        sourceMap: true
+      })
+    ]
+	},
+  plugins: [
+		new webpack.DefinePlugin({
+    	'process.env.NODE_ENV': '"production"'
+    })
+  ]
 };

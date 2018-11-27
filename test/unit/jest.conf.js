@@ -2,6 +2,7 @@ const path = require('path')
 
 module.exports = {
   rootDir: path.resolve(__dirname, '../../'),
+  moduleDirectories: ["node_modules", "src"],
   moduleFileExtensions: [
     'js',
     'json',
@@ -10,7 +11,7 @@ module.exports = {
     '^@/(.*)$': '<rootDir>/src/$1'
   },
   transform: {
-    '^.+\\.js$': '<rootDir>/node_modules/babel-jest'
+    '^.+\\.jsx?$': 'babel-jest'
   },
   testPathIgnorePatterns: [
     '<rootDir>/test/e2e'

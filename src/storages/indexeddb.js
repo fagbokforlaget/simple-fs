@@ -20,15 +20,15 @@ export default class Storage extends BaseStorage {
   }
 
   remove (path) {
-    return this.storage.files.delete({path: path})
+    return this.storage.files.delete({ path: path })
   }
 
   put (path, node, parentId) {
-    return this.storage.files.put({path: path, node: node, parentId: parentId})
+    return this.storage.files.put({ path: path, node: node, parentId: parentId })
   }
 
   get (path) {
-    return this.storage.files.get({path: path})
+    return this.storage.files.get({ path: path })
   }
 
   getBy (key, value) {
@@ -40,7 +40,7 @@ export default class Storage extends BaseStorage {
 
   isEmpty (parentId) {
     return new Promise((resolve, reject) => {
-      this.storage.files.where({parentId: parentId})
+      this.storage.files.where({ parentId: parentId })
         .count()
         .then((count) => {
           resolve(count === 0)

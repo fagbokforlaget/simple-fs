@@ -10,43 +10,37 @@
 
 <body>
   <iframe id="frame"></iframe>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.0.0/polyfill.js"></script>
   <script src="dist/SimpleFS.min.js"></script>
   <script>
     const fs = new SimpleFS({backend: 'indexeddb', name: 'book-store'})
 
-    // creates abc folder
-    fs.mkdir('abc').then((data) => {console.log(data)}).catch((e) => {console.error(e)})
+    function readFile() {
+      fs.readFile('abc/test.html').then((data) => {
+        // data is blob
+        console.log(data);
+        var url = URL.createObjectURL(data);
+        console.log('blob url: ' + url);
+        var frame = document.getElementById('frame');
+        frame.setAttribute('src', url);
 
-    // adds def folder to abc
-    fs.mkdir('abc/def').then((data) => {console.log(data)}).catch((e) => {console.error(e)})
+        // create file reader and read blob
+        var fr = new FileReader();
+        fr.onload = function() {
+          console.log(fr.result);
+        }
+        fr.readAsText(data);
+      })
+    }
 
-    // removes folder
-    fs.rmdir('abc/def').then((data) => {console.log(data)}).catch((e) => {console.error(e)})
-
-    fs.writeFile('abc/theme.css', new Blob(['h1 { color: green }'], {type: 'text/css'})).then((data) => { console.log(data) }).catch((e) => { console.error(e) })
-
-    // creates file
-fs.writeFile('abc/test.html', new Blob(['<html><head><link rel="stylesheet" type="text/css" href="abc/theme.css"></head><body><h1>Bloby</h1><img src="https://res.cloudinary.com/forlagshuset/image/upload/v1520845867/FBF_banner_spring_fpa5e3bd2o.jpg"></body></html>'], {type:'text/html'})).then((data) => {console.log(data)}).catch((e) => {console.error(e)})
-
-    // read files
-    fs.readFile('abc/test.html').then((data) => {
-      // data is blob
-      console.log(data);
-      var url = URL.createObjectURL(data);
-      console.log('blob url: ' + url);
-      var frame = document.getElementById('frame');
-      frame.setAttribute('src', url);
-
-      // create file reader and read blob
-      var fr = new FileReader();
-      fr.onload = function() {
-        console.log(fr.result);
-      }
-      fr.readAsText(data);
-    }).catch((e) => {console.error(e)})
-
-    // deletes file
-    fs.unlink('abc/test.txt').then((data) => {console.log(data)}).catch((e) => {console.error(e)})
+    fs.mkdir('abc') // creates abc folder
+      .then(() => fs.mkdir('abc/def')) // adds def folder to  abc
+      .then(() => fs.rmdir('abc/def')) // removes def folder
+      .then(() => fs.writeFile('abc/theme.css', new Blob(['h1 { color: green }'], {type: 'text/css'})))
+      .then(() => fs.writeFile('abc/test.html', new Blob(['<html><head><link rel="stylesheet" type="text/css" href="abc/theme.css"></head><body><h1>Bloby</h1><img src="https://res.cloudinary.com/forlagshuset/image/upload/v1520845867/FBF_banner_spring_fpa5e3bd2o.jpg"></body></html>'], {type:'text/html'})))
+      .then(() => readFile())
+      .then(() => fs.unlink('abc/test.html'))
+      .catch((e) => {console.error(e)})
   </script>
 </body>
 </html>

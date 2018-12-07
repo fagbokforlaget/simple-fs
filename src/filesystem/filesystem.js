@@ -24,34 +24,30 @@ export default class FileSystem {
     }
   }
 
-  mkdir (path) {
+  async mkdir (path) {
     path = new Path(path).normalize()
 
-    return this.exists(path)
-      .then((data) => {
-        if (data) {
-          return data.path
-        }
+    const data = await this.exists(path)
 
-        return this.exists(path.parent)
-          .then((parent) => {
-            let parentId = parent ? parent.path : 0
+    if (data) {
+      return data.path
+    }
 
-            if (!path.parent.isRoot && !parent) {
-              throw new Error('parent is not created yet')
-            } else if (parent && parent.node.mode !== MODE.DIR) {
-              throw new Error('parent is not dir')
-            }
+    const parent = await this.exists(path.parent)
+    let parentId = parent ? parent.path : 0
 
-            let node = new Node(path.path, MODE.DIR, 0)
+    if (!path.parent.isRoot && !parent) {
+      throw new Error('parent is not created yet')
+    } else if (parent && parent.node.mode !== MODE.DIR) {
+      throw new Error('parent is not dir')
+    }
 
-            return this.storage.create(path.path, node, parentId)
-          })
-      })
+    let node = new Node(path.path, MODE.DIR, 0)
+    return this.storage.create(path.path, node, parentId)
   }
 
   // Recursively creates directory, eq. to mkdir -p
-  mkdirParents (path, root = '') {
+  async mkdirParents (path, root = '') {
     let mparts
     let mroot
     let currentPath
@@ -65,151 +61,123 @@ export default class FileSystem {
       return this.mkdir(currentPath)
     }
 
-    return this.mkdir(currentPath).then(p => this.mkdirParents(mparts.join('/'), currentPath))
+    await this.mkdir(currentPath)
+    return this.mkdirParents(mparts.join('/'), currentPath)
   }
 
-  rmdir (path) {
+  async rmdir (path) {
     path = new Path(path).normalize()
-    return this.exists(path)
-      .then((data) => {
-        if (!data) {
-          throw new Error('dir does not exists')
-        } else if (data.node.mode === MODE.DIR) {
-          return this.storage.isEmpty(data.path)
-        } else {
-          throw new Error('it is not a dir')
-        }
-      })
-      .then((isEmpty) => {
-        if (isEmpty) {
-          return this.storage.remove(path.path)
-        } else {
-          throw new Error('dir is not empty')
-        }
-      })
+    const data = await this.exists(path)
+    let isEmpty = false
+
+    if (!data) {
+      throw new Error('dir does not exists')
+    } else if (data.node.mode === MODE.DIR) {
+      isEmpty = await this.storage.isEmpty(data.path)
+    } else {
+      throw new Error('it is not a dir')
+    }
+
+    if (isEmpty) {
+      await this.storage.remove(path.path)
+    } else {
+      throw new Error('dir is not empty')
+    }
   }
 
-  readFile (path, options) {
+  async readFile (path, options) {
     path = new Path(path).normalize()
-
-    return new Promise((resolve, reject) => {
-      this.storage.get(path.path)
-        .then((data) => {
-          if (!data) {
-            throw new Error('file does not exists')
-          }
-          resolve(data.node.data)
-        })
-        .catch((e) => reject(e))
-    })
+    let data = await this.storage.get(path.path)
+    if (!data) {
+      throw new Error('file does not exist')
+    }
+    return data.node.data
   }
 
-  writeFile (path, data, options) {
+  async writeFile (path, data, options) {
     path = new Path(path).normalize()
 
     if (!(data instanceof Blob)) {
       throw new Error('data must be instance of Blob')
     }
 
-    return this.exists(path.parent)
-      .then((parent) => {
-        if (!parent) {
-          throw new Error('file needs parent')
-        } else if (parent && parent.node.mode !== MODE.DIR) {
-          throw new Error('parent should be dir')
-        }
+    const parent = await this.exists(path.parent)
 
-        const parentId = parent.path
-        const node = new Node(path.path, MODE.FILE, data.size, options, data)
+    if (!parent) {
+      throw new Error('file needs parent')
+    } else if (parent && parent.node.mode !== MODE.DIR) {
+      throw new Error('parent should be dir')
+    }
 
-        return this.storage.put(path.path, node, parentId)
-      })
+    const parentId = parent.path
+    const node = new Node(path.path, MODE.FILE, data.size, options, data)
+
+    return this.storage.put(path.path, node, parentId)
   }
 
   // Same as writeFile but it recursively creates directory
   // if not exists
-  outputFile (path, data, options) {
+  async outputFile (path, data, options) {
     path = new Path(path).normalize()
 
     if (!(data instanceof Blob)) {
       throw new Error('data must be instance of Blob')
     }
 
-    return this.mkdirParents(path.parent)
-      .then(parentPath => this.exists(parentPath))
-      .then((parent) => {
-        if (parent && parent.node.mode !== MODE.DIR) {
-          throw new Error('parent should be dir')
-        }
+    let parentPath = await this.mkdirParents(path.parent)
+    let parent = await this.exists(parentPath)
+    if (parent && parent.node.mode !== MODE.DIR) {
+      throw new Error('parent should be dir')
+    }
 
-        const parentId = parent.path
-        const node = new Node(path.path, MODE.FILE, data.size, options, data)
+    const parentId = parent.path
+    const node = new Node(path.path, MODE.FILE, data.size, options, data)
 
-        return this.storage.put(path.path, node, parentId)
-      })
+    return this.storage.put(path.path, node, parentId)
   }
 
-  rename (oldPath, newPath) {
-    return new Promise((resolve, reject) => {
-      throw Error('not implemented')
-    })
+  async rename (oldPath, newPath) {
+    throw new Error('not implemented')
   }
 
-  unlink (path) {
+  async unlink (path) {
     path = new Path(path).normalize()
+    const data = await this.exists(path)
 
-    return this.exists(path)
-      .then((data) => {
-        if (!data) {
-          throw new Error('file does not exists')
-        } else if (data.node.mode === MODE.DIR) {
-          throw new Error('path points to a directory, please use rmdir')
-        } else {
-          return this.storage.remove(data.path)
-        }
-      })
+    if (!data) {
+      throw new Error('file does not exists')
+    } else if (data.node.mode === MODE.DIR) {
+      throw new Error('path points to a directory, please use rmdir')
+    } else {
+      return this.storage.remove(data.path)
+    }
   }
 
-  exists (path) {
+  async exists (path) {
     path = new Path(path).normalize()
 
     return this.storage.get(path.path)
   }
 
-  stats (path) {
-    return this.exists(path)
-      .then((data) => {
-        return new Promise((resolve, reject) => {
-          if (data) {
-            resolve(new Stats(data.node, this.path))
-          } else {
-            reject(new Error('path does not exists'))
-          }
-        })
-      }).catch((err) => { throw err })
+  async stats (path) {
+    let data = await this.exists(path)
+    if (data) return new Stats(data.node, this.path)
+    else throw new Error('path does not exist')
   }
 
-  ls (path, filters = {}) {
-    return this.exists(path)
-      .then((data) => {
-        if (data) {
-          return new Promise((resolve, reject) => {
-            this.storage.getBy('parentId', data.path)
-              .then((nodes) => {
-                if (Object.keys(filters).length > 0) {
-                  nodes = nodes.filter((node) => {
-                    node = new FileInfo(node.node, node.path)
-                    return Object.keys(filters).some((key) => {
-                      return node[key] === filters[key]
-                    })
-                  })
-                }
-                resolve(nodes.map(node => new FileInfo(node.node, node.path)))
-              })
-          })
-        } else {
-          return new Error('path does not exists')
-        }
-      })
+  async ls (path, filters = {}) {
+    let data = await this.exists(path)
+    if (data) {
+      let nodes = await this.storage.where({ parentId: data.path })
+      let filterKeys = Object.keys(filters)
+      if (filterKeys.length > 0) {
+        nodes = nodes.filter((node) => {
+          let fileInfo = new FileInfo(node.node, node.path)
+          return filterKeys.some((key) => { return fileInfo[key] === filters[key] })
+        })
+      }
+      return nodes.map(node => new FileInfo(node.node, node.path))
+    }
+    return new Error('path does not exist')
   }
 }

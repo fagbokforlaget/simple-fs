@@ -8,64 +8,57 @@ export default class MemoryStorage extends BaseStorage {
     this.data = {}
   }
 
-  create (path, node, parentId) {
+  async create (path, node, parentId) {
     this.data[path] = { path: path, node: node, parentId: parentId }
-    return new Promise((resolve, reject) => {
-      resolve(path)
-    })
+    return path
   }
 
-  remove (path) {
-    return new Promise((resolve, reject) => {
-      if (path in this.data) {
-        delete this.data[path]
-      }
-      resolve(undefined)
-    })
+  async remove (path) {
+    if (path in this.data) {
+      delete this.data[path]
+    }
+    return undefined
   }
 
-  put (path, node, parentId) {
+  async put (path, node, parentId) {
     return this.create(path, node, parentId)
   }
 
-  get (path) {
-    return new Promise((resolve, reject) => {
-      const keys = Object.keys(this.data)
+  async get (path) {
+    const keys = Object.keys(this.data)
 
-      for (let i = 0; i < keys.length; i++) {
-        if (this.data[keys[i]].path === path) {
-          resolve(this.data[keys[i]])
-        }
+    for (let i = 0; i < keys.length; i++) {
+      if (this.data[keys[i]].path === path) {
+        return this.data[keys[i]]
       }
-      resolve(undefined)
-    })
+    }
+    return undefined
   }
 
-  getBy (key, value) {
-    return new Promise((resolve, reject) => {
-      const keys = Object.keys(this.data)
-      let ret = []
+  async where (params) {
+    let ret = []
+    let paramsKeys = Object.keys(params)
 
-      for (let i = 0; i < keys.length; i++) {
-        if (this.data[keys[i]][key] === value) {
-          ret.push(this.data[keys[i]])
-        }
-      }
-      resolve(ret)
+    Object.keys(this.data).forEach((d) => {
+      let canBe = true
+      let object = this.data[d]
+      paramsKeys.forEach((param) => {
+        if (object[param] !== params[param]) canBe = false
+      })
+      if (canBe) ret.push(object)
     })
+    return ret
   }
 
-  isEmpty (parentId) {
-    return new Promise((resolve, reject) => {
-      let count = 0
-      const keys = Object.keys(this.data)
+  async isEmpty (parentId) {
+    let count = 0
+    const keys = Object.keys(this.data)
 
-      for (let i = 0; i < keys.length; i++) {
-        if (this.data[keys[i]].parentId === parentId) {
-          count += 1
-        }
+    for (let i = 0; i < keys.length; i++) {
+      if (this.data[keys[i]].parentId === parentId) {
+        count += 1
       }
-      resolve(count === 0)
-    })
+    }
+    return count === 0
   }
 }

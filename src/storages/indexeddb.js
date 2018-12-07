@@ -19,8 +19,8 @@ export default class Storage extends BaseStorage {
     return this.put(path, node, parentId)
   }
 
-  remove (path) {
-    return this.storage.files.delete({ path: path })
+  async remove (path) {
+    await this.storage.files.where({ path: path }).delete()
   }
 
   put (path, node, parentId) {
@@ -35,16 +35,15 @@ export default class Storage extends BaseStorage {
     let params = {}
     params[key] = value
 
-    return this.storage.files.get(params)
+    return this.storage.files.where(params).toArray()
   }
 
-  isEmpty (parentId) {
-    return new Promise((resolve, reject) => {
-      this.storage.files.where({ parentId: parentId })
-        .count()
-        .then((count) => {
-          resolve(count === 0)
-        })
-    })
+  where (params) {
+    return this.storage.files.where(params).toArray()
+  }
+
+  async isEmpty (parentId) {
+    let count = await this.storage.files.where({ parentId: parentId }).count()
+    return count === 0
   }
 }

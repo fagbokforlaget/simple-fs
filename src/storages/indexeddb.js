@@ -35,7 +35,11 @@ export default class Storage extends BaseStorage {
     let params = {}
     params[key] = value
 
-    return this.storage.files.get(params)
+    return this.storage.files.where(params).toArray()
+  }
+
+  where (params) {
+    return this.storage.files.where(params).toArray()
   }
 
   isEmpty (parentId) {

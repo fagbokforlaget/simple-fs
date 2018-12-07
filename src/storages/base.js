@@ -15,7 +15,7 @@ export default class BaseStorage {
     throw new Error('not implemented')
   }
 
-  getBy (key, value) {
+  where (params) {
     throw new Error('not implemented')
   }
 

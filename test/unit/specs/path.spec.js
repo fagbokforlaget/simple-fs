@@ -14,7 +14,7 @@ describe('Path API', () => {
   })
 
   it('throws an error when an argument is not path nor string', () => {
-    expect(() => new Path({path: "/root"})).toThrow()
+    expect(() => new Path({ path: '/root' })).toThrow()
   })
 
   it('should normalize path', () => {

@@ -15,7 +15,8 @@ module.exports =  {
     filename: outputFile,
     library: libraryName,
     libraryExport: 'default',
-    libraryTarget: 'umd'
+    libraryTarget: 'umd',
+    globalObject: `typeof self !== 'undefined' ? self : this`,
   },
   module: {
     rules: [

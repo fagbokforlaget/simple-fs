@@ -3,6 +3,8 @@ module.exports = {
     '@babel/env',
     '@babel/flow'
   ],
-  plugins: ['transform-regenerator']
+  plugins: [
+    '@babel/plugin-transform-runtime'
+  ]
 }
 

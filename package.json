@@ -1,6 +1,6 @@
 {
   "name": "@forlagshuset/simple-fs",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "File system in indexeddb",
   "main": "./dist/SimpleFS.min.js",
   "scripts": {

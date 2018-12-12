@@ -173,10 +173,10 @@ export default class FileSystem {
       let nodes = await this.storage.where({ parentId: data.path })
 
       if (filterKeys.length > 0) {
-        nodes = nodes.filter( (node) => {
+        nodes = nodes.filter((node) => {
           const fileInfo = new FileInfo(node.node, node.path)
 
-          return filterKeys.some( (key) => {
+          return filterKeys.some((key) => {
             return fileInfo[key] === filters[key]
           })
         })

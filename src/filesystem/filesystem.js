@@ -166,18 +166,25 @@ export default class FileSystem {
   }
 
   async ls (path, filters = {}) {
-    let data = await this.exists(path)
+    const filterKeys = Object.keys(filters)
+    const data = await this.exists(path)
+
     if (data) {
       let nodes = await this.storage.where({ parentId: data.path })
-      let filterKeys = Object.keys(filters)
+
       if (filterKeys.length > 0) {
-        nodes = nodes.filter((node) => {
-          let fileInfo = new FileInfo(node.node, node.path)
-          return filterKeys.some((key) => { return fileInfo[key] === filters[key] })
+        nodes = nodes.filter( (node) => {
+          const fileInfo = new FileInfo(node.node, node.path)
+
+          return filterKeys.some( (key) => {
+            return fileInfo[key] === filters[key]
+          })
         })
       }
+
       return nodes.map(node => new FileInfo(node.node, node.path))
     }
-    return new Error('path does not exist')
+
+    throw new Error('path does not exist')
   }
 }

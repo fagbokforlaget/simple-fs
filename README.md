@@ -47,6 +47,7 @@ let blob = await fs.readFile('/myproject/test.txt')
 mkdir(<path>)
 mkdirParents(<path>) // wraps mkdir -p
 rmdir(<path>)
+rmdirRecursive(<path>) // removes dirs recursively
 readFile(<path>, <options>={}) // returns Blob
 writeFile(<path>, <data>, <options>={}) // data should be Blob type
 outputFile(<path>, <data>, <options>={}) // Wraps writeFile and recursively creates path if not exists

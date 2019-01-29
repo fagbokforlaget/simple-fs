@@ -207,4 +207,26 @@ describe('Filesystem API', () => {
     let respRoot = await fs.ls('/root', { 'mode': 'DIR' })
     expect(respRoot.length).toBe(1)
   })
+
+  it('deletes recursively', async () => {
+    let fs = new FileSystem({ backend: 'memory', name: 'test' })
+    let blob = new Blob(['my test data'], { type: 'plain/text' })
+
+    let dirs = ['/rootX', '/rootX/files', '/rootX/files/1', '/rootX/anotherFiles']
+    let files = ['/rootX/test1.txt', '/rootX/files/test2.txt', '/rootX/files/test3.txt', '/rootX/files/1/test4.txt', '/rootX/anotherFiles/test4.txt']
+
+    for (let el of dirs) {
+      await fs.mkdir(el)
+    }
+
+    for (let el of files) {
+      await fs.writeFile(el, blob)
+    }
+
+    await fs.rmdirRecursive('/rootX')
+
+    for (let el of files.concat(dirs)) {
+      expect(await fs.exists(el)).not.toBe(true)
+    }
+  })
 })

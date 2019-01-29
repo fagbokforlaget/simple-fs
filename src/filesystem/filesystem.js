@@ -153,6 +153,23 @@ export default class FileSystem {
     }
   }
 
+  async rmdirRecursive (path) {
+    path = new Path(path).normalize()
+    let data = await this.exists(path)
+
+    if (!data) return true
+    if (data.node.mode !== MODE.DIR) return this.unlink(path)
+
+    let list = await this.ls(path)
+
+    for (let element of list) {
+      if (element.node.mode !== MODE.DIR) await this.unlink(element.path)
+      else await this.rmdirRecursive(element.path)
+    }
+
+    return this.rmdir(path)
+  }
+
   async exists (path) {
     path = new Path(path).normalize()
 

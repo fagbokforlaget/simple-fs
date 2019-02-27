@@ -5,6 +5,13 @@ module.exports = {
   ],
   plugins: [
     '@babel/plugin-transform-runtime'
-  ]
+  ],
+  env: {
+    mjs: {
+      presets: [
+        ['@babel/env', { modules: false}],
+      ]
+    }
+  }
 }
 

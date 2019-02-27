@@ -19,14 +19,17 @@ npm:
 ```
 npm install --save @forlagshuset/simple-fs
 ```
-browser:
+browser (umd):
 ```html
 <script src='https://unpkg.com/@forlagshuset/simple-fs@latest/dist/SimpleFS.min.js' async></script>
 ```
 
 ## Usage
+browser (modules)
 ```javascript
 import FileSystem from '@forlagshuset/simple-fs'
+// OR es6 modules from unpkg
+import FileSystem from "//unpkg.com/@forlagshuset/simple-fs?module"
 
 let fs = new FileSystem({name: 'storage-name'})
 

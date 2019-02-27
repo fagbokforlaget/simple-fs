@@ -10,8 +10,9 @@
 
 <body>
   <iframe id="frame"></iframe>
-  <script src="dist/SimpleFS.min.js"></script>
-  <script>
+  <script type="module">
+    import * as SimpleFS from "./dist/index"
+
     const fs = new SimpleFS({backend: 'indexeddb', name: 'book-store'})
 
     function readFile() {

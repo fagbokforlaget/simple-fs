@@ -1,0 +1,8 @@
+[include]
+./src
+
+[ignore]
+.*/build/.*
+
+[libs]
+./libs

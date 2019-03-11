@@ -22,6 +22,20 @@ npm install --save @forlagshuset/simple-fs
 browser (umd):
 ```html
 <script src='https://unpkg.com/@forlagshuset/simple-fs@latest/dist/SimpleFS.min.js' async></script>
+<script>
+  const fs = new SimpleFS({name:'storage-name'})
+  // do stuff
+
+  await fs.mkdir('/myproject')
+
+  // create a file under root folder
+  const content = new Blob(['This is my cool project'], {type: 'plain/text'})
+  await fs.writeFile('/myproject/test.txt', content)
+
+  // get content as blob
+  let blob = await fs.readFile('/myproject/test.txt')
+
+</script>
 ```
 
 ## Usage
@@ -31,14 +45,14 @@ import FileSystem from '@forlagshuset/simple-fs'
 // OR es6 modules from unpkg
 import FileSystem from "//unpkg.com/@forlagshuset/simple-fs?module"
 
-let fs = new FileSystem({name: 'storage-name'})
+const fs = new FileSystem({name: 'storage-name'})
 
 // first create root folder
-let root = await fs.mkdir('/myproject')
+await fs.mkdir('/myproject')
 
 // create a file under root folder
-let content = new Blob(['This is my cool project'], {type: 'plain/text'})
-let data = await fs.writeFile('/myproject/test.txt', content)
+const content = new Blob(['This is my cool project'], {type: 'plain/text'})
+await fs.writeFile('/myproject/test.txt', content)
 
 // get content as blob
 let blob = await fs.readFile('/myproject/test.txt')

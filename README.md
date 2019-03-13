@@ -41,11 +41,11 @@ browser (umd):
 ## Usage
 browser (modules)
 ```javascript
-import FileSystem from '@forlagshuset/simple-fs'
+import SimpleFS from '@forlagshuset/simple-fs'
 // OR es6 modules from unpkg
-import FileSystem from "//unpkg.com/@forlagshuset/simple-fs?module"
+import SimpleFS from "//unpkg.com/@forlagshuset/simple-fs?module"
 
-const fs = new FileSystem({name: 'storage-name'})
+const fs = new SimpleFS({name: 'storage-name'})
 
 // first create root folder
 await fs.mkdir('/myproject')

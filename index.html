@@ -11,7 +11,7 @@
 <body>
   <iframe id="frame"></iframe>
   <script type="module">
-    import { FileSystem as SimpleFS } from "//unpkg.com/@forlagshuset/simple-fs?module"
+    import SimpleFS from "https://unpkg.com/@forlagshuset/simple-fs@latest?module"
 
     const fs = new SimpleFS({backend: 'indexeddb', name: 'book-store'})
 

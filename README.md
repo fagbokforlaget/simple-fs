@@ -19,6 +19,8 @@ npm:
 ```
 npm install --save @forlagshuset/simple-fs
 ```
+
+## Usage
 browser (umd):
 ```html
 <script src='https://unpkg.com/@forlagshuset/simple-fs@latest/dist/SimpleFS.min.js' async></script>
@@ -38,7 +40,7 @@ browser (umd):
 </script>
 ```
 
-## Usage
+
 browser (modules)
 ```javascript
 import SimpleFS from '@forlagshuset/simple-fs'

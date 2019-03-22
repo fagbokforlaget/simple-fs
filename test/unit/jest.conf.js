@@ -2,10 +2,10 @@ const path = require('path')
 
 module.exports = {
   rootDir: path.resolve(__dirname, '../../'),
-  moduleDirectories: ["node_modules", "src"],
+  moduleDirectories: ['node_modules', 'src'],
   moduleFileExtensions: [
     'js',
-    'json',
+    'json'
   ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1'

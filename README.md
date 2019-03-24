@@ -8,6 +8,8 @@
 
 A minimal, extensible and promise based filesystem layer for modern browsers.
 
+[Live Demo](https://codepen.io/iapain/full/MxLNeg)
+
 ## Supported backeneds
 
 * IndexedDB (default)

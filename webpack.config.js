@@ -33,6 +33,9 @@ module.exports =  {
       {
         test: /(\.jsx|\.js)$/,
         loader: "eslint-loader",
+        options: {
+          formatter: require("eslint/lib/cli-engine/formatters/stylish")
+        },
         exclude: /node_modules/
       }
     ]

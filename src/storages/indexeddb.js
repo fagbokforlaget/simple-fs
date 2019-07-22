@@ -32,7 +32,7 @@ export default class Storage extends BaseStorage {
   }
 
   getBy (key, value) {
-    let params = {}
+    const params = {}
     params[key] = value
 
     return this.storage.files.where(params).toArray()
@@ -43,7 +43,7 @@ export default class Storage extends BaseStorage {
   }
 
   async isEmpty (parentId) {
-    let count = await this.storage.files.where({ parentId: parentId }).count()
+    const count = await this.storage.files.where({ parentId: parentId }).count()
     return count === 0
   }
 }

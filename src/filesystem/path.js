@@ -23,19 +23,19 @@ export default class Path {
   }
 
   get basename () {
-    let parts = this.path.match(/(\/)?(\w+\.(\S+))/)
+    const parts = this.path.match(/(\/)?(\w+\.(\S+))/)
     if (parts.size < 2) return undefined
     return parts[2]
   }
 
   get extension () {
-    let parts = this.path.match(/(\/)?(\w+\.(\S+))/)
+    const parts = this.path.match(/(\/)?(\w+\.(\S+))/)
     if (parts.size < 3) return undefined
     return parts[3]
   }
 
   get parent () {
-    let parts = this.path.split('/')
+    const parts = this.path.split('/')
     parts.pop()
     return new Path(parts.join('/')).normalize()
   }

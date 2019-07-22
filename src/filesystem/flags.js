@@ -1,6 +1,6 @@
 // flags for files/dirs
 
 export default {
-  'READ': 'READ',
-  'WRITE': 'WRITE'
+  READ: 'READ',
+  WRITE: 'WRITE'
 }

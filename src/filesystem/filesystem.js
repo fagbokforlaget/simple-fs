@@ -34,7 +34,7 @@ export default class FileSystem {
     }
 
     const parent = await this.exists(path.parent)
-    let parentId = parent ? parent.path : 0
+    const parentId = parent ? parent.path : 0
 
     if (!path.parent.isRoot && !parent) {
       throw new Error('parent is not created yet')
@@ -42,20 +42,16 @@ export default class FileSystem {
       throw new Error('parent is not dir')
     }
 
-    let node = new Node(path.path, MODE.DIR, 0)
+    const node = new Node(path.path, MODE.DIR, 0)
     return this.storage.create(path.path, node, parentId)
   }
 
   // Recursively creates directory, eq. to mkdir -p
   async mkdirParents (path, root = '') {
-    let mparts
-    let mroot
-    let currentPath
-
     path = new Path(path).normalize()
-    mparts = path.path.split('/')
-    mroot = root === '' ? '/' : `${root}/`
-    currentPath = mroot + mparts.shift()
+    const mparts = path.path.split('/')
+    const mroot = root === '' ? '/' : `${root}/`
+    const currentPath = mroot + mparts.shift()
 
     if (mparts.length === 0) {
       return this.mkdir(currentPath)
@@ -87,7 +83,7 @@ export default class FileSystem {
 
   async readFile (path, options) {
     path = new Path(path).normalize()
-    let data = await this.storage.get(path.path)
+    const data = await this.storage.get(path.path)
     if (!data) {
       throw new Error('file does not exist')
     }
@@ -124,8 +120,8 @@ export default class FileSystem {
       throw new Error('data must be instance of Blob')
     }
 
-    let parentPath = await this.mkdirParents(path.parent)
-    let parent = await this.exists(parentPath)
+    const parentPath = await this.mkdirParents(path.parent)
+    const parent = await this.exists(parentPath)
     if (parent && parent.node.mode !== MODE.DIR) {
       throw new Error('parent should be dir')
     }
@@ -155,14 +151,14 @@ export default class FileSystem {
 
   async rmdirRecursive (path) {
     path = new Path(path).normalize()
-    let data = await this.exists(path)
+    const data = await this.exists(path)
 
     if (!data) return true
     if (data.node.mode !== MODE.DIR) return this.unlink(path)
 
-    let list = await this.ls(path)
+    const list = await this.ls(path)
 
-    for (let element of list) {
+    for (const element of list) {
       if (element.node.mode !== MODE.DIR) await this.unlink(element.path)
       else await this.rmdirRecursive(element.path)
     }
@@ -177,7 +173,7 @@ export default class FileSystem {
   }
 
   async stats (path) {
-    let data = await this.exists(path)
+    const data = await this.exists(path)
     if (data) return new Stats(data.node, this.path)
     else throw new Error('path does not exist')
   }

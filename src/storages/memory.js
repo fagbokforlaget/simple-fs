@@ -36,12 +36,12 @@ export default class MemoryStorage extends BaseStorage {
   }
 
   async where (params) {
-    let ret = []
-    let paramsKeys = Object.keys(params)
+    const paramsKeys = Object.keys(params)
+    const ret = []
 
     Object.keys(this.data).forEach((d) => {
       let canBe = true
-      let object = this.data[d]
+      const object = this.data[d]
       paramsKeys.forEach((param) => {
         if (object[param] !== params[param]) canBe = false
       })

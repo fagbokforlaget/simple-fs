@@ -93,7 +93,7 @@ describe('Filesystem API', () => {
     let id = await fs.mkdir('root')
     expect(typeof id).toBe('string')
 
-    await expect(fs.readFile('root/test.txt')).rejects.toEqual(new Error('file does not exist'))
+    await expect(fs.readFile('root/test.txt')).rejects.toEqual(new Error('File root/test.txt does not exist'))
   })
 
   it('write file without root', async () => {

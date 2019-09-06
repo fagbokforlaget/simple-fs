@@ -85,7 +85,7 @@ export default class FileSystem {
     path = new Path(path).normalize()
     const data = await this.storage.get(path.path)
     if (!data) {
-      throw new Error('file does not exist')
+      throw new Error(`File ${path.path} does not exist`)
     }
     return data.node.data
   }

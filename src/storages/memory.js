@@ -5,6 +5,16 @@ export default class MemoryStorage extends BaseStorage {
     super(storageName)
 
     this.name = 'memory'
+    // for unit testing
+    this.storage = {
+      files: {},
+      transaction: function (mode, table, cb) {
+        return new Promise((resolve, reject) => {
+          resolve(cb())
+        })
+      }
+    }
+
     this.data = {}
   }
 
@@ -22,6 +32,10 @@ export default class MemoryStorage extends BaseStorage {
 
   async put (path, node, parentId) {
     return this.create(path, node, parentId)
+  }
+
+  async transaction(mode, cb) {
+    return this.storage.transaction(mode, this.storage.files, cb)
   }
 
   async get (path) {

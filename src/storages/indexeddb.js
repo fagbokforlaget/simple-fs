@@ -27,6 +27,10 @@ export default class Storage extends BaseStorage {
     return this.storage.files.put({ path: path, node: node, parentId: parentId })
   }
 
+  transaction (mode, cb) {
+    return this.storage.transaction(mode, this.storage.files, cb)
+  }
+
   get (path) {
     return this.storage.files.get({ path: path })
   }

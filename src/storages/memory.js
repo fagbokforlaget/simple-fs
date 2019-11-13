@@ -34,7 +34,7 @@ export default class MemoryStorage extends BaseStorage {
     return this.create(path, node, parentId)
   }
 
-  async transaction(mode, cb) {
+  async transaction (mode, cb) {
     return this.storage.transaction(mode, this.storage.files, cb)
   }
 

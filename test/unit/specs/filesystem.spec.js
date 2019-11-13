@@ -52,6 +52,34 @@ describe('Filesystem API', () => {
     await expect(fs.rmdir('/root/xx')).rejects.toEqual(new Error('dir is not empty'))
   })
 
+  it('does bulk insert', async () => {
+    let fs = new FileSystem({ backend: 'memory', name: 'test' })
+    let blob = new Blob(['my test data'], { type: 'plain/text' })
+    await fs.bulkOutputFiles([
+      {path: '/root/xx/test.txt', blob: blob},
+      {path: '/root/xy/test.txt', blob: blob},
+      {path: '/root/xz/test.txt', blob: blob},
+      {path: '/root/xa/test.txt', blob: blob},
+      {path: '/root/xb/test.txt', blob: blob},
+      {path: '/root/xc/test.txt', blob: blob},
+      {path: '/root/xd/test.txt', blob: blob},
+      {path: '/root/xe/test.txt', blob: blob},
+      {path: '/root/xf/test.txt', blob: blob},
+      {path: '/root/xg/test.txt', blob: blob},
+    ])
+
+    await expect(fs.rmdir('/root/xx')).rejects.toEqual(new Error('dir is not empty'))
+    await expect(fs.rmdir('/root/xy')).rejects.toEqual(new Error('dir is not empty'))
+    await expect(fs.rmdir('/root/xz')).rejects.toEqual(new Error('dir is not empty'))
+    await expect(fs.rmdir('/root/xa')).rejects.toEqual(new Error('dir is not empty'))
+    await expect(fs.rmdir('/root/xb')).rejects.toEqual(new Error('dir is not empty'))
+    await expect(fs.rmdir('/root/xc')).rejects.toEqual(new Error('dir is not empty'))
+    await expect(fs.rmdir('/root/xd')).rejects.toEqual(new Error('dir is not empty'))
+    await expect(fs.rmdir('/root/xe')).rejects.toEqual(new Error('dir is not empty'))
+    await expect(fs.rmdir('/root/xf')).rejects.toEqual(new Error('dir is not empty'))
+    await expect(fs.rmdir('/root/xg')).rejects.toEqual(new Error('dir is not empty'))
+  })
+
   it('create file', async () => {
     let fs = new FileSystem({ backend: 'memory', name: 'test' })
 

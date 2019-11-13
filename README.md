@@ -65,16 +65,17 @@ let blob = await fs.readFile('/myproject/test.txt')
 ## API
 
 ```javascript
-mkdir(<path>)
-mkdirParents(<path>) // wraps mkdir -p
-rmdir(<path>)
-rmdirRecursive(<path>) // removes dirs recursively
-readFile(<path>, <options>={}) // returns Blob
-writeFile(<path>, <data>, <options>={}) // data should be Blob type
-outputFile(<path>, <data>, <options>={}) // Wraps writeFile and recursively creates path if not exists
-unlink(<path>)
-exists(<path>)
-stats(<path>)
+mkdir(path: string)
+mkdirParents(path: string) // wraps mkdir -p
+rmdir(path: string)
+rmdirRecursive(path: string) // removes dirs recursively
+readFile(path: string, options={}) // returns Blob
+writeFile(path: string, data: Blob, options={}) // data should be Blob type
+outputFile(path: string, data: Blob, options={}) // Wraps writeFile and recursively creates path if not exists
+bulkOutputFiles([{path: string, blob: Blob, options:{}]) // Output files in one transaction, speeds up in chrome
+unlink(path: string)
+exists(path: string)
+stats(path: string)
 ```
 
 ## Browser support

@@ -137,8 +137,8 @@ export default class FileSystem {
   // this makes chrome happy
   // https://dev.to/skhmt/why-are-indexeddb-operations-significantly-slower-in-chrome-vs-firefox-1bnd
   async bulkOutputFiles (objs) {
-    return await this.storage.transaction('rw', async () => {
-      for (let i=0; i<objs.length; i++) {
+    return this.storage.transaction('rw', async () => {
+      for (let i = 0; i < objs.length; i++) {
         const o = objs[i]
         await this.outputFile(o.path, o.blob, o.options || {})
       }

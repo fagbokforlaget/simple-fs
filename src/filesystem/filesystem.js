@@ -136,13 +136,12 @@ export default class FileSystem {
   // Chrome is quite slow with lots of insertion, hence
   // this makes chrome happy
   // https://dev.to/skhmt/why-are-indexeddb-operations-significantly-slower-in-chrome-vs-firefox-1bnd
-  bulkOutputFiles (objs) {
-    return this.storage.transaction('rw', async () => {
-      for (const o of objs) {
+  async bulkOutputFiles (objs) {
+    return await this.storage.transaction('rw', async () => {
+      for (let i=0; i<objs.length; i++) {
+        const o = objs[i]
         await this.outputFile(o.path, o.blob, o.options || {})
       }
-    }).catch((e) => {
-      throw e
     })
   }
 

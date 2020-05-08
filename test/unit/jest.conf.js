@@ -18,10 +18,5 @@ module.exports = {
   ],
   setupFiles: ['<rootDir>/test/unit/setup'],
   coverageDirectory: '<rootDir>/test/unit/coverage',
-  collectCoverageFrom: [
-    'src/**/*.{js}',
-    '!src/main.js',
-    '!src/router/index.js',
-    '!**/node_modules/**'
-  ]
+  collectCoverage: true
 }

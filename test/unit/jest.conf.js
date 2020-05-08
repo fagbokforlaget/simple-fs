@@ -17,6 +17,6 @@ module.exports = {
     '<rootDir>/test/e2e'
   ],
   setupFiles: ['<rootDir>/test/unit/setup'],
-  coverageDirectory: '<rootDir>/test/unit/coverage',
+  coverageDirectory: '<rootDir>/coverage',
   collectCoverage: true
 }

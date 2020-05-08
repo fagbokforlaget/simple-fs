@@ -9,7 +9,7 @@
     "build:mjs": "rollup -c rollup.config.js",
     "build": "npm run build:umd && npm run build:mjs",
     "dev": "webpack --progress --colors --watch --mode=development",
-    "unit": "jest --config test/unit/jest.conf.js",
+    "unit": "./node_modules/.bin/jest --config test/unit/jest.conf.js",
     "test": "npm run unit",
     "test:watch": "mocha --require @babel/register --require @babel/plugin-transform-runtime --colors -w ./test/*.spec.js",
     "clean": "rimraf dist",

@@ -7,7 +7,6 @@ import Node from './node'
 import Stats from './stats'
 import FileInfo from './fileinfo'
 import IndexedDbStorage from '../storages/indexeddb'
-import MemoryStorage from '../storages/memory'
 
 export default class FileSystem {
   constructor (opts = {}) {

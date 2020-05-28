@@ -10,10 +10,17 @@ A minimal, extensible and promise based filesystem layer for modern browsers.
 
 [Live Demo](https://codepen.io/iapain/full/MxLNeg)
 
-## Supported backeneds
+## Supported storage backend
+Simple-fs provides two storage backend. It's possible to write your own stoage backend using [Storage API](https://github.com/fagbokforlaget/simple-fs/blob/master/src/storages/base.js)
 
 * IndexedDB (default)
+```
+import IndexedDbStorage from '@forlagshuset/simple-fs/storages/indexeddb'
+```
 * Memory (experimental and used for testing)
+```
+import MemoryStorage from '@forlagshuset/simple-fs/storages/memory'
+```
 
 ## Installation
 
@@ -27,7 +34,8 @@ browser (umd):
 ```html
 <script src='https://unpkg.com/@forlagshuset/simple-fs@latest/dist/SimpleFS.min.js' async></script>
 <script>
-  const fs = new SimpleFS({name:'storage-name'})
+  // by default SimpleFS uses IndexedDB
+  const fs = new SimpleFS()
   // do stuff
 
   await fs.mkdir('/myproject')
@@ -49,7 +57,7 @@ import SimpleFS from '@forlagshuset/simple-fs'
 // OR es6 modules from unpkg
 import SimpleFS from "//unpkg.com/@forlagshuset/simple-fs?module"
 
-const fs = new SimpleFS({name: 'storage-name'})
+const fs = new SimpleFS()
 
 // first create root folder
 await fs.mkdir('/myproject')
@@ -64,7 +72,9 @@ let blob = await fs.readFile('/myproject/test.txt')
 
 ## API
 
+FileSystem
 ```javascript
+constructor({storage: storageObj = new IndexedDbStorage('my-storage-name')})
 mkdir(path: string)
 mkdirParents(path: string) // wraps mkdir -p
 rmdir(path: string)

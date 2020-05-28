@@ -10,18 +10,8 @@ import IndexedDbStorage from '../storages/indexeddb'
 import MemoryStorage from '../storages/memory'
 
 export default class FileSystem {
-  constructor (opts) {
-    opts.backend = opts.backend || 'indexeddb'
-    this.storage = null
-
-    switch (opts.backend) {
-      case 'indexeddb':
-        this.storage = new IndexedDbStorage(opts.name)
-        break
-      case 'memory':
-        this.storage = new MemoryStorage(opts.name)
-        break
-    }
+  constructor (opts = {}) {
+    this.storage = opts.storage || new IndexedDbStorage((opts && opts.name) || 'default')
   }
 
   async mkdir (path) {

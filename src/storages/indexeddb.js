@@ -4,7 +4,7 @@ import Dexie from 'dexie'
 import BaseStorage from './base'
 
 export default class Storage extends BaseStorage {
-  constructor (storageName) {
+  constructor (storageName='default') {
     super(storageName)
 
     this.name = 'indexeddb'

@@ -1,7 +1,33 @@
 import FileSystem from '../../../src/index'
 import MemoryStorage from '../../../src/storages/memory'
 
-describe('Filesystem API', () => {
+describe('Filesystem API using IDB', () => {
+  let fs
+
+  beforeEach(() => {
+    fs = new FileSystem()
+  })
+
+  it('creates instance', () => {
+    expect(typeof fs).toBe('object')
+  })
+
+  it('create directory mkdir', async () => {
+    const id = await fs.mkdir('root')
+
+    expect(typeof id).toBe('string')
+  })
+
+  it('create nested directory with error', async () => {
+    const path = '/root/is/the/king'
+
+    await expect(fs.mkdir(path)).rejects.toEqual(new Error('parent is not created yet'))
+  })
+
+
+})
+
+describe('Filesystem API using memory storage', () => {
   let fs
 
   beforeEach(() => {

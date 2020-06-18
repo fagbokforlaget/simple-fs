@@ -1,28 +1,55 @@
 import FileSystem from '../../../src/index'
+import MemoryStorage from '../../../src/storages/memory'
 
-describe('Filesystem API', () => {
+describe('Filesystem API using IDB', () => {
+  let fs
+
+  beforeEach(() => {
+    fs = new FileSystem()
+  })
+
   it('creates instance', () => {
-    let fs = new FileSystem({ name: 'test' })
     expect(typeof fs).toBe('object')
   })
 
   it('create directory mkdir', async () => {
-    let fs = new FileSystem({ backend: 'memory', name: 'test' })
+    const id = await fs.mkdir('root')
 
+    expect(typeof id).toBe('string')
+  })
+
+  it('create nested directory with error', async () => {
+    const path = '/root/is/the/king'
+
+    await expect(fs.mkdir(path)).rejects.toEqual(new Error('parent is not created yet'))
+  })
+
+
+})
+
+describe('Filesystem API using memory storage', () => {
+  let fs
+
+  beforeEach(() => {
+    fs = new FileSystem({storage: new MemoryStorage()})
+  })
+
+  it('creates instance', () => {
+    expect(typeof fs).toBe('object')
+  })
+
+  it('create directory mkdir', async () => {
     let id = await fs.mkdir('root')
     expect(typeof id).toBe('string')
   })
 
   it('create directory mkdirParents', async () => {
-    let fs = new FileSystem({ backend: 'memory', name: 'test' })
     let path = '/root/is/the/king'
     let id = await fs.mkdirParents(path)
     expect(id).toBe(path)
   })
 
   it('delete directory rmdir', async () => {
-    let fs = new FileSystem({ backend: 'memory', name: 'test' })
-
     let id = await fs.mkdir('root')
     expect(typeof id).toBe('string')
 
@@ -31,13 +58,10 @@ describe('Filesystem API', () => {
   })
 
   it('delete directory that does not exists', async () => {
-    let fs = new FileSystem({ backend: 'memory', name: 'test' })
-
     await expect(fs.rmdir('root')).rejects.toEqual(new Error('dir does not exists'))
   })
 
   it('does not delete file with rmdir', async () => {
-    let fs = new FileSystem({ backend: 'memory', name: 'test' })
     let blob = new Blob(['my test data'], { type: 'plain/text' })
     await fs.outputFile('/root/xx/test.txt', blob)
 
@@ -45,7 +69,6 @@ describe('Filesystem API', () => {
   })
 
   it('does not delete non-empty dirs', async () => {
-    let fs = new FileSystem({ backend: 'memory', name: 'test' })
     let blob = new Blob(['my test data'], { type: 'plain/text' })
     await fs.outputFile('/root/xx/test.txt', blob)
 
@@ -53,7 +76,6 @@ describe('Filesystem API', () => {
   })
 
   it('does bulk insert', async () => {
-    let fs = new FileSystem({ backend: 'memory', name: 'test' })
     let blob = new Blob(['my test data'], { type: 'plain/text' })
     await fs.bulkOutputFiles([
       {path: '/root/xx/test.txt', blob: blob},
@@ -81,8 +103,6 @@ describe('Filesystem API', () => {
   })
 
   it('create file', async () => {
-    let fs = new FileSystem({ backend: 'memory', name: 'test' })
-
     let id = await fs.mkdir('root')
     expect(typeof id).toBe('string')
 
@@ -93,8 +113,6 @@ describe('Filesystem API', () => {
   })
 
   it('create file and creates parent dirs recursively', async () => {
-    let fs = new FileSystem({ backend: 'memory', name: 'test' })
-
     let blob = new Blob(['my test data'], { type: 'plain/text' })
 
     let resp = await fs.outputFile('root/to/some/unknown/folder/test.txt', blob)
@@ -102,8 +120,6 @@ describe('Filesystem API', () => {
   })
 
   it('read file', async () => {
-    let fs = new FileSystem({ backend: 'memory', name: 'test' })
-
     let id = await fs.mkdir('root')
     expect(typeof id).toBe('string')
 
@@ -116,8 +132,6 @@ describe('Filesystem API', () => {
   })
 
   it('read file which does not exists', async () => {
-    let fs = new FileSystem({ backend: 'memory', name: 'test' })
-
     let id = await fs.mkdir('root')
     expect(typeof id).toBe('string')
 
@@ -125,15 +139,12 @@ describe('Filesystem API', () => {
   })
 
   it('write file without root', async () => {
-    let fs = new FileSystem({ backend: 'memory', name: 'test' })
     let blob = new Blob(['my test data'], { type: 'plain/text' })
 
     await expect(fs.writeFile('root/test.txt', blob)).rejects.toEqual(new Error('file needs parent'))
   })
 
   it('unlink file', async () => {
-    let fs = new FileSystem({ backend: 'memory', name: 'test' })
-
     let id = await fs.mkdir('root')
     expect(typeof id).toBe('string')
 
@@ -148,8 +159,6 @@ describe('Filesystem API', () => {
   })
 
   it('stats file', async () => {
-    let fs = new FileSystem({ backend: 'memory', name: 'test' })
-
     let id = await fs.mkdir('root')
     expect(typeof id).toBe('string')
 
@@ -162,8 +171,6 @@ describe('Filesystem API', () => {
   })
 
   it('check if file is a directory', async () => {
-    let fs = new FileSystem({ backend: 'memory', name: 'test' })
-
     let id = await fs.mkdir('root')
     expect(typeof id).toBe('string')
 
@@ -179,13 +186,10 @@ describe('Filesystem API', () => {
   })
 
   it('rename file', async () => {
-    let fs = new FileSystem({ backend: 'memory', name: 'test' })
-
     await expect(fs.rename('root/test.txt', 'root/new.txt')).rejects.toEqual(new Error('not implemented'))
   })
 
   it('list root files', async () => {
-    let fs = new FileSystem({ backend: 'memory', name: 'test' })
     await fs.mkdir('/root')
     await fs.mkdir('/root/files')
     let blob = new Blob(['my test data'], { type: 'plain/text' })
@@ -198,7 +202,6 @@ describe('Filesystem API', () => {
   })
 
   it('list child files', async () => {
-    let fs = new FileSystem({ backend: 'memory', name: 'test' })
     await fs.mkdir('root')
     await fs.mkdir('root/files')
     let blob = new Blob(['my test data'], { type: 'plain/text' })
@@ -211,7 +214,6 @@ describe('Filesystem API', () => {
   })
 
   it('list child file as FileInfo', async () => {
-    let fs = new FileSystem({ backend: 'memory', name: 'test' })
     await fs.mkdir('root')
     await fs.mkdir('root/files')
     let blob = new Blob(['my test data'], { type: 'plain/text' })
@@ -225,7 +227,6 @@ describe('Filesystem API', () => {
   })
 
   it('filters output', async () => {
-    let fs = new FileSystem({ backend: 'memory', name: 'test' })
     await fs.mkdir('/root')
     await fs.mkdir('/root/files')
     let blob = new Blob(['my test data'], { type: 'plain/text' })
@@ -237,7 +238,6 @@ describe('Filesystem API', () => {
   })
 
   it('deletes recursively', async () => {
-    let fs = new FileSystem({ backend: 'memory', name: 'test' })
     let blob = new Blob(['my test data'], { type: 'plain/text' })
 
     let dirs = ['/rootX', '/rootX/files', '/rootX/files/1', '/rootX/anotherFiles']

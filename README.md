@@ -32,7 +32,7 @@ npm install --save @forlagshuset/simple-fs
 ## Usage
 browser (umd):
 ```html
-<script src='https://unpkg.com/@forlagshuset/simple-fs@latest/dist/SimpleFS.min.js' async></script>
+<script src='https://unpkg.com/@forlagshuset/simple-fs@latest/dist/SimpleFS.js' async></script>
 <script>
   // by default SimpleFS uses IndexedDB
   const fs = new SimpleFS()

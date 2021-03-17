@@ -1,5 +1,4 @@
-import FileSystem from '../../../src/index'
-import MemoryStorage from '../../../src/storages/memory'
+import { FileSystem, MemoryStorage } from '../../../src/index'
 
 describe('Filesystem API using IDB', () => {
   let fs

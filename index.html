@@ -11,9 +11,9 @@
 <body>
   <iframe id="frame"></iframe>
   <script type="module">
-    import SimpleFS from "https://unpkg.com/@forlagshuset/simple-fs@latest?module"
+    import SimpleFS from "/dist/SimpleFS.mjs"
 
-    const fs = new SimpleFS({backend: 'indexeddb', name: 'book-store'})
+    const fs = new SimpleFS.FileSystem()
 
     function readFile() {
       fs.readFile('abc/test.html').then((data) => {

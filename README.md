@@ -35,7 +35,7 @@ browser (umd):
 <script src='https://unpkg.com/@forlagshuset/simple-fs@latest/dist/SimpleFS.js' async></script>
 <script>
   // by default SimpleFS uses IndexedDB
-  const fs = new SimpleFS()
+  const fs = new SimpleFS.FileSystem()
   // do stuff
 
   await fs.mkdir('/myproject')
@@ -57,7 +57,7 @@ import SimpleFS from '@forlagshuset/simple-fs'
 // OR es6 modules from unpkg
 import SimpleFS from "//unpkg.com/@forlagshuset/simple-fs?module"
 
-const fs = new SimpleFS()
+const fs = new SimpleFS.FileSystem()
 
 // first create root folder
 await fs.mkdir('/myproject')

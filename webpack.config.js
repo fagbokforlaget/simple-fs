@@ -4,7 +4,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 const libraryName = 'SimpleFS';
 
-let outputFile = libraryName + '.min.js';
+let outputFile = `${libraryName}.js`;
 
 module.exports =  {
   mode: 'production',

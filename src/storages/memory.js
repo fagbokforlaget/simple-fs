@@ -1,7 +1,7 @@
 import BaseStorage from './base'
 
 export default class MemoryStorage extends BaseStorage {
-  constructor (storageName='default') {
+  constructor (storageName = 'default') {
     super(storageName)
 
     this.name = 'memory'

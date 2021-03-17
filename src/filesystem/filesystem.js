@@ -10,7 +10,8 @@ import IndexedDbStorage from '../storages/indexeddb'
 
 export default class FileSystem {
   constructor (opts = {}) {
-    this.storage = opts.storage || new IndexedDbStorage((opts && opts.name) || 'default')
+    this.storage = opts.storage ||
+      new IndexedDbStorage((opts && opts.name) || 'default')
   }
 
   async mkdir (path) {

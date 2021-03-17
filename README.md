@@ -15,11 +15,11 @@ Simple-fs provides two storage backend. It's possible to write your own stoage b
 
 * IndexedDB (default)
 ```
-import IndexedDbStorage from '@forlagshuset/simple-fs/storages/indexeddb'
+import { IndexedDbStorage } from '@forlagshuset/simple-fs'
 ```
 * Memory (experimental and used for testing)
 ```
-import MemoryStorage from '@forlagshuset/simple-fs/storages/memory'
+import { MemoryStorage } from '@forlagshuset/simple-fs'
 ```
 
 ## Installation

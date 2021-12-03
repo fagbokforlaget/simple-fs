@@ -70,7 +70,7 @@
   "author": "Michal Ostrowski <michal.ostrowski@forlagshuset.no>",
   "license": "MIT",
   "dependencies": {
-    "dexie": "3.0.3"
+    "dexie": "3.2.0"
   },
   "directories": {
     "test": "test"

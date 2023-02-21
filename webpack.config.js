@@ -44,7 +44,10 @@ module.exports =  {
     modules: [
       path.join(__dirname, "src"),
       "node_modules"
-    ]
+    ],
+    alias: {
+      dexie: path.resolve(__dirname, 'node_modules/dexie/dist/dexie.min'),
+    }
   },
 	optimization: {
     minimizer: [

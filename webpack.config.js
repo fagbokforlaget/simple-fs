@@ -1,6 +1,5 @@
 const webpack = require('webpack');
 const path = require('path');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 const libraryName = 'SimpleFS';
 
@@ -49,15 +48,6 @@ module.exports =  {
       dexie: path.resolve(__dirname, 'node_modules/dexie/dist/dexie.min'),
     }
   },
-	optimization: {
-    minimizer: [
-      new UglifyJsPlugin({
-        cache: true,
-        parallel: true,
-        sourceMap: true
-      })
-    ]
-	},
   plugins: [
 		new webpack.DefinePlugin({
     	'process.env.NODE_ENV': '"production"'
